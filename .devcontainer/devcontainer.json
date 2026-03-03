@@ -1,0 +1,20 @@
+{
+	"name": "Default Linux Universal",
+	"image": "mcr.microsoft.com/devcontainers/universal:5-linux",
+	"features": {
+		"ghcr.io/devcontainers/features/aws-cli:1": {}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"github.copilot",
+				"github.copilot-chat",
+				"AmazonWebServices.aws-toolkit-vscode",
+				"kddejong.vscode-cfn-lint"
+			]
+		}
+	},
+	"containerEnv": {"AWS_CONFIG_FILE": "${containerWorkspaceFolder}/.devcontainer/config"},
+	"postCreateCommand": "npm install --global aws-cdk && pip install boto3[crt]",
+	"postAttachCommand": "aws sso login"
+}

@@ -1,0 +1,8 @@
+{
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+        "ghcr.io/devcontainers/features/node:1": {}
+    },
+    "onCreateCommand": "npm install -g @devcontainers/cli",
+    "postStartCommand": "devcontainer templates apply --template-id ghcr.io/katohirosato/aws-dev"
+}
