@@ -1,10 +1,12 @@
 {
   "id": "aws-dev",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "name": "Dev Container Template for AWS Development",
   "description": "Dev Container Template for AWS Development",
   "documentationURL": "https://github.com/katohirosato/aws-dev/",
   "publisher": "加藤宏怜(katohirosato)",
   "licenseURL": "https://github.com/katohirosato/aws-dev/",
-  "keywords": ["AWS"]
+  "keywords": [
+    "AWS"
+  ]
 }
