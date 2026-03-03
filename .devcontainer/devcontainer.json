@@ -16,6 +16,6 @@
 	},
 	"containerEnv": {"AWS_CONFIG_FILE": "${containerWorkspaceFolder}/.devcontainer/config"},
 	"postCreateCommand": "npm install --global aws-cdk && pip install boto3[crt]",
-    "postStartCommand": "devcontainer templates apply --template-id ghcr.io/katohirosato/aws-dev/aws-dev --omit-paths '[\".git/*\", \".github\"]' && mv github/ .github/",
+    "postStartCommand": "devcontainer templates apply --template-id ghcr.io/katohirosato/aws-dev/aws-dev --omit-paths '[\".git/*\", \".github/*\"]' && mv github/ .github/",
 	"postAttachCommand": "aws sso login"
 }
