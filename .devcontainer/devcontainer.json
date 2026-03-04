@@ -15,6 +15,6 @@
 		}
 	},
 	"containerEnv": {"AWS_CONFIG_FILE": "${containerWorkspaceFolder}/.devcontainer/config"},
-	"postCreateCommand": "npm install --global aws-cdk && pip install boto3[crt]",
+	"postStartCommand": "npm install --global aws-cdk && pip install boto3[crt]",
 	"postAttachCommand": "aws sso login"
 }
