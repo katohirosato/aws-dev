@@ -12,4 +12,7 @@ git config user.email "<your.email@example.com>"
 git add .
 git commit -m "first commit"
 git push -u origin main
+# > Dev Container: Reopen in WSL
 # > Dev Container: Rebuild and Reopen in Container as .devcontainer/devcontainer.json
+aws configure sso
+aws sso login

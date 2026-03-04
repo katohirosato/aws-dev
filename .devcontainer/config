@@ -1,9 +1,0 @@
-[default]
-sso_session = cdk
-sso_account_id = 
-sso_role_name = 
-region = 
-[sso-session cdk]
-sso_start_url = 
-sso_region = 
-sso_registration_scopes = 
