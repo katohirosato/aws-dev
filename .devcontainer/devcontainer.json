@@ -16,6 +16,7 @@
                 "github.vscode-github-actions",
                 "github.remotehub",
                 "AmazonWebServices.aws-toolkit-vscode",
+                "amazonwebservices.amazon-q-vscode",
                 "kddejong.vscode-cfn-lint"
             ]
         }
