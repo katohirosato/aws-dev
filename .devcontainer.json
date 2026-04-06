@@ -1,8 +1,0 @@
-{
-    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-    "features": {
-        "ghcr.io/devcontainers/features/node:1": {}
-    },
-    "postCreateCommand": "npm install -g @devcontainers/cli",
-    "postStartCommand": "devcontainer templates apply --template-id ghcr.io/katohirosato/aws-dev/aws-template --omit-paths '[\".git/*\", \".github/workflows/release.yaml\"]' "
-}

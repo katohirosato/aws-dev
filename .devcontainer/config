@@ -1,9 +1,0 @@
-[default]
-sso_session = cli
-sso_account_id = 
-sso_role_name = 
-region = ap-northeast-1
-[sso-session cli]
-sso_start_url = 
-sso_region = ap-northeast-1
-sso_registration_scopes = sso:account:access

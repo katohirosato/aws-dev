@@ -1,4 +1,5 @@
 #!/bin/sh
+# usage: ./startup.sh [repo-name]
 set -ue
 
 REPO_NAME="${1:-aws-app}"
