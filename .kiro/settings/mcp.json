@@ -1,14 +1,13 @@
 {
   "mcpServers": {
-    "awslabs.aws-documentation-mcp-server": {
+    "aws-docs": {
       "command": "uvx",
-      "args": [
-        "awslabs.aws-documentation-mcp-server@latest"
-      ],
+      "args": ["awslabs.aws-documentation-mcp-server@latest"],
       "env": {
-        "AWS_DOCUMENTATION_PARTITION": "aws",
         "FASTMCP_LOG_LEVEL": "ERROR"
-      }
+      },
+      "disabled": false,
+      "autoApprove": []
     }
   }
 }
