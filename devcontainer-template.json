@@ -1,6 +1,6 @@
 {
   "id": "aws-dev",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "name": "Dev Container Template for AWS Development",
   "description": "Dev Container Template for AWS Development",
   "documentationURL": "https://github.com/katohirosato/aws-aws/",
