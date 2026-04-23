@@ -1,0 +1,1 @@
+devcontainer templates apply --template-id ghcr.io/katohirosato/aws-dev/aws-dev --omit-paths '[".git/*", "README.md", "devcontainer-template.json", ".github/workflows/tempalte.yaml", "history.sh", "devcontainer/config"]'
