@@ -1,7 +1,12 @@
 #!/bin/sh
 set -ue
 
-REPO_NAME="${1:-aws-template}"
+REPO_NAME="${1:-aws-dev}"
+
+git clone https://github.com/awslabs/aidlc-workflows.git
+cp -R aidlc-workflows/aidlc-rules/aws-aidlc-rules .kiro/steering/
+cp -R aidlc-workflows/aidlc-rules/aws-aidlc-rules-details .kiro/
+rm -rf aidlc-workflows
 
 if [ ! -d .git ]; then
     git init

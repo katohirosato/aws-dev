@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "github.copilot-chat",
+    "github.vscode-pull-request-github",
+    "github.codespaces",
+    "github.vscode-github-actions",
+    "github.remotehub",
+    "AmazonWebServices.aws-toolkit-vscode",
+    "amazonwebservices.amazon-q-vscode",
+    "kddejong.vscode-cfn-lint",
+    "hediet.vscode-drawio",
+    "ms-vscode.live-server",
+    "yzhang.markdown-all-in-one",
+    "davidanson.vscode-markdownlint"
+  ]
+}
