@@ -1,6 +1,7 @@
 {
     "name": "Workspaces Prototype",
     "image": "mcr.microsoft.com/devcontainers/universal:5-linux",
+    "runArgs": ["--env-file", ".devcontainer/devcontainer.env"],
     "features": {
         "ghcr.io/devcontainers/features/aws-cli:1": {},
         "ghcr.io/devcontainers/features/git-lfs:1": {},
@@ -23,7 +24,7 @@
             ]
         }
     },
-    "containerEnv": {"AWS_CONFIG_FILE": "${containerWorkspaceFolder}/.devcontainer/config", "CDK_APP": "${containerWorkspaceFolderBasename}"},
+    "containerEnv": {"AWS_CONFIG_FILE": "${containerWorkspaceFolder}/.devcontainer/config", "CDK_APP": "${containerEnv:CDK_APP:${containerWorkspaceFolderBasename}}"},
     "postCreateCommand": ".devcontainer/postCreateCommand.sh",
     "postStartCommand": ".devcontainer/postStartCommand.sh",
     "postAttachCommand": "aws sso login"
