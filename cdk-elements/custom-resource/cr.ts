@@ -11,7 +11,7 @@ export interface CustomResourceProps {
 }
 
 export class CustomResource extends Construct{
-  public readonly customresource: cr.CustomResource;
+  public readonly customresource: cdk.CustomResourceProps;
   constructor(scope: Construct, id: string, props: CustomResourceProps) {
     super(scope, id);
     const provider = new cr.Provider(this, 'Provider', {
