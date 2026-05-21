@@ -16,7 +16,7 @@ description: AWS SDK を実行する Lambda 関数が必要とする IAM ロー�
 
 ## 手順
 
-1. `image/create.py`, `image/update.py`, `image/delete.py` を読み、boto3 クライアント/リソースの呼び出し（`client()`, `resource()` の引数サービス名、および呼び出しメソッド名）をすべて列挙する
+1. `image/` を読み、boto3 クライアント/リソースの呼び出し（`client()`, `resource()` の引数サービス名、および呼び出しメソッド名）をすべて列挙する
 2. 各メソッド呼び出しを対応する IAM アクション（`service:Action` 形式）にマッピングする
 3. リソース ARN を可能な限り限定する。ワイルドカード (`*`) は対象リソースを特定できない場合のみ使用する
 4. `role.ts` に `role.addToPolicy()` でインラインポリシーとして追加する。複数サービスにまたがる場合は `PolicyStatement` を分ける

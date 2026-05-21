@@ -2,7 +2,6 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as cr from 'aws-cdk-lib/custom-resources';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
 
 import { CustomResource } from './cr';
 import { Repository } from './repository';
