@@ -39,9 +39,7 @@ export class ClientVPN extends Construct {
       logGroup,
       logStream,
       splitTunnel: true,
-      vpcSubnets: {
-        subnetGroupName: 'PrivateSubnet',
-      },
+      vpcSubnets: { subnets: props.vpc.privateSubnets, },
       securityGroups: [props.clientSecurityGroup, vpnSecurityGroup],
     });
   }
