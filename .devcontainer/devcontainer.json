@@ -21,7 +21,11 @@
                 "AmazonWebServices.aws-toolkit-vscode",
                 "amazonwebservices.amazon-q-vscode",
                 "kddejong.vscode-cfn-lint",
-                "ms-python.python"
+                "ms-python.python",
+                "hediet.vscode-drawio",
+                "ms-vscode.live-server",
+                "yzhang.markdown-all-in-one",
+                "davidanson.vscode-markdownlint"
             ]
         }
     },
