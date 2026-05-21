@@ -2,14 +2,9 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 
-export interface VpcProps {
-  readonly maxAzs: number;
-  readonly natGateways: number;
-}
-
 export class Vpc extends Construct {
   public readonly vpc: ec2.IVpc;
-  constructor(scope: Construct, id: string, props: VpcProps) {
+  constructor(scope: Construct, id: string, props: ec2.VpcProps) {
     super(scope, id);
     const vpc = new ec2.Vpc(this, 'VPC', {
       maxAzs: props.maxAzs,
@@ -26,9 +21,9 @@ export class Vpc extends Construct {
           subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
         },
         {
-            cidrMask: 24,
-            name: 'IsolatedSubnet',
-            subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+          cidrMask: 24,
+          name: 'IsolatedSubnet',
+          subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
         }
       ]
     });

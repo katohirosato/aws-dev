@@ -22,31 +22,20 @@ custom-resource/
 
 ## class CustomResourceConstruct (Construct)
 
-ECR リポジトリ、IAM ロール、Docker イメージ Lambda、および CloudFormation カスタムリソースを一括で作成する Construct。
+カスタムリソースとそのために必要なリソース一式を作成します。
 
 ### Example
 
 ```ts
-import { CustomResourceConstruct } from './custom_resource/construct';
+declare const vpc: ec2.IVpc
+
+import { CustomResourceConstruct } from './custom-resource/construct';
 
 const cr = new CustomResourceConstruct(this, 'MyCustomResource', {
   vpc: vpc,
   resourceType: 'Custom::MyResource',
 });
 ```
-
-### Initializer
-
-```ts
-new CustomResourceConstruct(scope: Construct, id: string, props: CustomResourceProps)
-```
-
-内部で以下のリソースを作成する:
-
-1. `Repository` — ECR リポジトリ
-2. `Role` — Lambda 実行ロール
-3. `Lambda` — DockerImageFunction
-4. `CustomResource` — Provider + CustomResource
 
 ### Construct Props
 

@@ -10,6 +10,7 @@ export class Role extends Construct {
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
     });
     role.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'));
+    // Add additional policies based on the boto3 calls in the Lambda handler
     this.role = role;
   }
 }

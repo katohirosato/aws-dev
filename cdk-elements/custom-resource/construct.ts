@@ -8,14 +8,13 @@ import { Repository } from './repository';
 import { Role } from './role';
 import { Lambda } from './lambda';
 
-export interface CustomResourceProps {
+export interface CustomResourceConstructProps {
   vpc: ec2.IVpc;
   resourceType?: string;
 }
 
 export class CustomResourceConstruct extends Construct {
-  public readonly customresource: cr.CustomResource;
-  constructor(scope: Construct, id: string, props: CustomResourceProps) {
+  constructor(scope: Construct, id: string, props: CustomResourceConstructProps) {
     super(scope, id);
     const repository = new Repository(this, 'Repository');
     const role = new Role(this, 'Role');
@@ -28,6 +27,5 @@ export class CustomResourceConstruct extends Construct {
       handler: lambda.lambdaFunction,
       resourceType: props.resourceType,
     });
-    this.customresource = customresource;
   }
 }
