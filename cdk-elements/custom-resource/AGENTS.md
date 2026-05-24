@@ -4,7 +4,7 @@ AWS CDK でカスタムリソースを記述するためのテンプレート
 
 ## ディレクトリ構造
 
-```
+```text:tree
 ./
 ├── construct.ts      # Construct としてのエントリーポイント
 ├── cr.ts             # Custom Resource
@@ -40,6 +40,6 @@ const cr = new CustomResourceConstruct(this, 'MyCustomResource', {
 ### Construct Props
 
 | Name | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `vpc` | `ec2.IVpc` | Provider を配置する VPC |
 | `resourceType?` | `string` | カスタムリソースのタイプ名（例: `Custom::MyResource`） |
