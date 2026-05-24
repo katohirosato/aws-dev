@@ -11,8 +11,7 @@ description: AWS SDK を実行する Lambda 関数が必要とする IAM ロー�
 ## 前提
 
 - `role.ts` は `aws-cdk-lib/aws-iam` を使用して Lambda 実行ロールを定義する
-- ベースとして `AWSLambdaBasicExecutionRole`（CloudWatch Logs 書き込み）が付与済み
-- VPC 内で実行する場合は `AWSLambdaVPCAccessExecutionRole` も必要になる場合がある
+- ベースとして `AWSLambdaVPCAccessExecutionRole`（CloudWatch Logs 書き込み）が付与済み
 
 ## 手順
 

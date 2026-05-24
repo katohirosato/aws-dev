@@ -5,7 +5,7 @@ AWS CDK でカスタムリソースを記述するためのテンプレート
 ## ディレクトリ構造
 
 ```
-custom-resource/
+./
 ├── construct.ts      # Construct としてのエントリーポイント
 ├── cr.ts             # Custom Resource
 ├── role.ts           # Lambda 関数が必要とする IAM ロール
