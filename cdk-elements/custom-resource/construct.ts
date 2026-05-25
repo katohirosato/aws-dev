@@ -5,15 +5,15 @@ import { Repository } from './repository';
 import { Role } from './role';
 import { CustomResource } from './cr';
 
-export interface S3FileGatewayProps {
+export interface CustomResourceConstructProps {
   vpc: ec2.IVpc;
   resourceProperties: {[key: string]: any};
   resourceType?: string;
 }
 
-export class S3FileGateway extends Construct {
+export class CustomResourceConstruct extends Construct {
   public readonly resource: cdk.CustomResource;
-  constructor(scope: Construct, id: string, props: S3FileGatewayProps) {
+  constructor(scope: Construct, id: string, props: CustomResourceConstructProps) {
     super(scope, id);
     const repository = new Repository(this, 'Repository');
     // リポジトリにイメージがまだ存在しない場合は以下をコメントアウト
