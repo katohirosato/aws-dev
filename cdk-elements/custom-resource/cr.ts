@@ -15,7 +15,7 @@ interface CustomResourceProps {
 }
 
 export class CustomResource extends Construct{
-  public readonly customresource: cdk.CustomResource;
+  public readonly cr: cdk.CustomResource;
   constructor(scope: Construct, id: string, props: CustomResourceProps) {
     super(scope, id);
     const onEventHandler = new lambda.DockerImageFunction(this, 'EventHandler', {
@@ -43,6 +43,6 @@ export class CustomResource extends Construct{
       resourceType: props.resourceType,
       properties: props.resourceProperties,
     });
-    this.customresource = resource;
+    this.cr = resource;
   }
 } 

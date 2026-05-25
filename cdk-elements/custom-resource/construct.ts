@@ -18,13 +18,13 @@ export class CustomResourceConstruct extends Construct {
     const repository = new Repository(this, 'Repository');
     // リポジトリにイメージがまだ存在しない場合は以下をコメントアウト
     const role = new Role(this, 'Role');
-    const customresource = new CustomResource(this, 'CustomResource', {
+    const cr = new CustomResource(this, 'CustomResource', {
       vpc: props.vpc,
       repository: repository.repository,
       role: role.role,
       resourceType: props.resourceType,
       resourceProperties: props.resourceProperties,
     });
-    this.resource = customresource.customresource;
+    this.resource = cr.cr;
   }
 }
