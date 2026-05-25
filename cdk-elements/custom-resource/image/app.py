@@ -8,11 +8,20 @@ from . import update
 logger = logging.getLogger()
 logger.setLevel("INFO")
 
-def handler(event, context):
+def on_event_handler(event, context):
     if event["RequestType"] == "Create":
-        response = create.handler(event, context)
+        response = create.on_event_handler(event, context)
     elif event["RequestType"] == "Update":
-        response = update.handler(event, context)
+        response = update.on_event_handler(event, context)
     elif event["RequestType"] == "Delete":
-        response = delete.handler(event, context)
+        response = delete.on_event_handler(event, context)
+    return response
+
+def is_complete_handler(event, context):
+    if event["RequestType"] == "Create":
+        response = create.is_complete_handler(event, context)
+    elif event["RequestType"] == "Update":
+        response = update.is_complete_handler(event, context)
+    elif event["RequestType"] == "Delete":
+        response = delete.is_complete_handler(event, context)
     return response

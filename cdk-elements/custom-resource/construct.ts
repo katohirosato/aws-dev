@@ -3,16 +3,17 @@ import { Construct } from 'constructs';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import { Repository } from './repository';
 import { Role } from './role';
-import { CustomResource, ResourceProperties } from './cr';
+import { CustomResource } from './cr';
 
-export interface CustomResourceConstructProps {
+export interface S3FileGatewayProps {
   vpc: ec2.IVpc;
-  resourceProperties: ResourceProperties;
+  resourceProperties: {[key: string]: any};
   resourceType?: string;
 }
 
-export class CustomResourceConstruct extends Construct {
-  constructor(scope: Construct, id: string, props: CustomResourceConstructProps) {
+export class S3FileGateway extends Construct {
+  public readonly resource: cdk.CustomResource;
+  constructor(scope: Construct, id: string, props: S3FileGatewayProps) {
     super(scope, id);
     const repository = new Repository(this, 'Repository');
     // リポジトリにイメージがまだ存在しない場合は以下をコメントアウト
@@ -24,5 +25,6 @@ export class CustomResourceConstruct extends Construct {
       resourceType: props.resourceType,
       resourceProperties: props.resourceProperties,
     });
+    this.resource = customresource.customresource;
   }
 }

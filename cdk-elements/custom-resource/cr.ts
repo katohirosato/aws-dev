@@ -6,13 +6,11 @@ import * as ecr from 'aws-cdk-lib/aws-ecr';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 
-export interface ResourceProperties {}
-
 interface CustomResourceProps {
   vpc: ec2.IVpc;
   repository: ecr.IRepository;
   role: iam.IRole;
-  resourceProperties: ResourceProperties;
+  resourceProperties: {[key: string]: any};
   resourceType?: string;
 }
 
@@ -20,15 +18,23 @@ export class CustomResource extends Construct{
   public readonly customresource: cdk.CustomResource;
   constructor(scope: Construct, id: string, props: CustomResourceProps) {
     super(scope, id);
-    const handler = new lambda.DockerImageFunction(this, 'LambdaFunction', {
-      code: lambda.DockerImageCode.fromEcr(props.repository),
+    const onEventHandler = new lambda.DockerImageFunction(this, 'EventHandler', {
+      code: lambda.DockerImageCode.fromEcr(props.repository, {cmd: ['app.on_event_handler']}),
+      role: props.role,
+      timeout: cdk.Duration.seconds(900),
+      vpc: props.vpc,
+      vpcSubnets: { subnets: props.vpc.privateSubnets },
+    });
+    const isCompleteHandler = new lambda.DockerImageFunction(this, 'IsCompleteHandler', {
+      code: lambda.DockerImageCode.fromEcr(props.repository, {cmd: ['app.is_complete_handler']}),
       role: props.role,
       timeout: cdk.Duration.seconds(900),
       vpc: props.vpc,
       vpcSubnets: { subnets: props.vpc.privateSubnets },
     });
     const provider = new cr.Provider(this, 'Provider', {
-      onEventHandler: handler,
+      onEventHandler: onEventHandler,
+      isCompleteHandler: isCompleteHandler,
       vpc: props.vpc,
       vpcSubnets: { subnets: props.vpc.privateSubnets },
     });

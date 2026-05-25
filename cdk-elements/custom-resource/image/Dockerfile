@@ -6,4 +6,5 @@ COPY . ${LAMBDA_TASK_ROOT}/.
 
 RUN pip install -r requirements.txt
 
-CMD [ "app.handler" ]
+CMD [ "app.on_event_handler" ]
+CMD [ "app.is_complete_handler" ]
