@@ -5,7 +5,7 @@ description: AWS SDK を実行する Lambda 関数が必要とする IAM ロー�
 
 ## 引数
 
-- `${CustomResourcePlase}`: 対象のカスタムリソースのディレクトリパス（例: `s3-file-gateway`）
+- `${CustomResourcePlase}`: 対象のカスタムリソースのディレクトリパス（例: `custom-resource`）
 
 ## 背景
 
