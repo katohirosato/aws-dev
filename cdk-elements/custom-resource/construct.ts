@@ -22,8 +22,8 @@ export class CustomResourceConstruct extends Construct {
       vpc: props.vpc,
       repository: repository.repository,
       role: role.role,
-      resourceType: props.resourceType,
       resourceProperties: props.resourceProperties,
+      resourceType: props.resourceType,
     });
     this.resource = cr.cr;
   }
