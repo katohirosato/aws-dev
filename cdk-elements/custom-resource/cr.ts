@@ -21,7 +21,7 @@ export class CustomResource extends Construct{
   constructor(scope: Construct, id: string, props: CustomResourceProps) {
     super(scope, id);
     const onEventHandler = new lambda.DockerImageFunction(this, 'EventHandler', {
-      code: lambda.DockerImageCode.fromImageAsset('lib/s3-file-gateway/image/', {cmd: ['app.on_event_handler']}),
+      code: lambda.DockerImageCode.fromEcr(props.repository, {cmd: ['app.on_event_handler']}),
       role: props.role,
       logGroup: props.logGroup,
       timeout: cdk.Duration.seconds(900),
@@ -29,7 +29,7 @@ export class CustomResource extends Construct{
       vpcSubnets: { subnets: props.vpc.isolatedSubnets },
     });
     const isCompleteHandler = new lambda.DockerImageFunction(this, 'IsCompleteHandler', {
-      code: lambda.DockerImageCode.fromImageAsset('lib/s3-file-gateway/image/', {cmd: ['app.is_complete_handler']}),
+      code: lambda.DockerImageCode.fromEcr(props.repository, {cmd: ['app.is_complete_handler']}),
       role: props.role,
       logGroup: props.logGroup,
       timeout: cdk.Duration.seconds(900),
