@@ -17,10 +17,15 @@ export class CustomResourceConstruct extends Construct {
     super(scope, id);
     const repository = new Repository(this, 'Repository');
     // リポジトリにイメージがまだ存在しない場合は以下をコメントアウト
+    const logGroup = new cdk.aws_logs.LogGroup(this, 'LogGroup', {
+      logGroupName: '/aws/custom-resource',
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    });
     const role = new Role(this, 'Role');
     const cr = new CustomResource(this, 'CustomResource', {
       vpc: props.vpc,
       repository: repository.repository,
+      logGroup: logGroup,
       role: role.role,
       resourceProperties: props.resourceProperties,
       resourceType: props.resourceType,
