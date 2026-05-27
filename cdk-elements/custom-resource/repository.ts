@@ -16,8 +16,7 @@ export class Repository extends Construct {
         },
       ]
     });
-    this.repository = repository;
-    new cdk.CfnOutput(this, 'RepositoryUri', {
+    new cdk.CfnOutput(this, 'RegistryUri', {
       value: repository.registryUri,
     });
     new cdk.CfnOutput(this, 'RepositoryName', {
