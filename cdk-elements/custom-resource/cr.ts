@@ -20,7 +20,7 @@ export class CustomResource extends Construct{
   public readonly cr: cdk.CustomResource;
   constructor(scope: Construct, id: string, props: CustomResourceProps) {
     super(scope, id);
-    const onEventHandler = new lambda.DockerImageFunction(this, 'EventHandler', {
+    const onEventHandler = new lambda.DockerImageFunction(this, 'OnEventHandler', {
       code: lambda.DockerImageCode.fromEcr(props.repository, {cmd: ['app.on_event_handler']}),
       role: props.role,
       logGroup: props.logGroup,
