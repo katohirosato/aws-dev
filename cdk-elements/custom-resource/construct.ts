@@ -18,7 +18,7 @@ export class CustomResourceConstruct extends Construct {
     const repository = new Repository(this, 'Repository');
     // リポジトリにイメージがまだ存在しない場合は以下をコメントアウト
     const logGroup = new cdk.aws_logs.LogGroup(this, 'LogGroup', {
-      logGroupName: `/${this.node.root.toString()}/${this.node.path}/LogGroup`,
+      logGroupName: `/${this.node.path}/LogGroup`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
     const role = new Role(this, 'Role');
