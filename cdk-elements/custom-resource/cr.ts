@@ -41,8 +41,8 @@ export class CustomResource extends Construct{
       logGroup: props.logGroup,
       vpc: props.vpc,
       vpcSubnets: { subnets: props.vpc.isolatedSubnets },
-      queryInterval: cdk.Duration.minutes(1),
-      totalTimeout: cdk.Duration.minutes(30),
+      queryInterval: cdk.Duration.minutes(5),
+      totalTimeout: cdk.Duration.hours(1),
     });
     const resource = new cdk.CustomResource(this, 'Resource', {
       serviceToken: provider.serviceToken,
