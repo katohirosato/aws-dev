@@ -27,7 +27,7 @@ export class CustomResourceConstruct extends Construct {
       repository: repository.repository,
       logGroup: logGroup,
       role: role.role,
-      resourceProperties: props.resourceProperties,
+      resourceProperties: {...props.resourceProperties, logGroupArn: logGroup.logGroupArn},
       resourceType: props.resourceType,
     });
     this.resource = cr.cr;

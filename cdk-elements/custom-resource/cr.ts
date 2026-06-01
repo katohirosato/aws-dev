@@ -4,15 +4,14 @@ import * as cr from 'aws-cdk-lib/custom-resources';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as ecr from 'aws-cdk-lib/aws-ecr';
 import * as logs from 'aws-cdk-lib/aws-logs';
 
 interface CustomResourceProps {
   vpc: ec2.IVpc;
   role: iam.IRole;
-  repository: ecr.IRepository;
   logGroup: logs.ILogGroup;
   resourceProperties: {[key: string]: any};
+  imageDir: string;
   resourceType?: string;
 }
 
@@ -21,7 +20,7 @@ export class CustomResource extends Construct{
   constructor(scope: Construct, id: string, props: CustomResourceProps) {
     super(scope, id);
     const onEventHandler = new lambda.DockerImageFunction(this, 'OnEventHandler', {
-      code: lambda.DockerImageCode.fromEcr(props.repository, {cmd: ['app.on_event_handler']}),
+      code: lambda.DockerImageCode.fromImageAsset(props.imageDir, {cmd: ['app.on_event_handler']}),
       role: props.role,
       logGroup: props.logGroup,
       timeout: cdk.Duration.seconds(900),
@@ -29,7 +28,7 @@ export class CustomResource extends Construct{
       vpcSubnets: { subnets: props.vpc.isolatedSubnets },
     });
     const isCompleteHandler = new lambda.DockerImageFunction(this, 'IsCompleteHandler', {
-      code: lambda.DockerImageCode.fromEcr(props.repository, {cmd: ['app.is_complete_handler']}),
+      code: lambda.DockerImageCode.fromImageAsset(props.imageDir, {cmd: ['app.is_complete_handler']}),
       role: props.role,
       logGroup: props.logGroup,
       timeout: cdk.Duration.seconds(900),
@@ -42,8 +41,8 @@ export class CustomResource extends Construct{
       logGroup: props.logGroup,
       vpc: props.vpc,
       vpcSubnets: { subnets: props.vpc.isolatedSubnets },
-      queryInterval: cdk.Duration.minutes(5),
-      totalTimeout: cdk.Duration.hours(1),
+      queryInterval: cdk.Duration.minutes(1),
+      totalTimeout: cdk.Duration.minutes(30),
     });
     const resource = new cdk.CustomResource(this, 'Resource', {
       serviceToken: provider.serviceToken,
