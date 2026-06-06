@@ -33,11 +33,15 @@ import { ApiConstruct } from './api/construct';
 
 const api = new ApiConstruct(this, 'Api', {
   vpc: vpc,
+  resource?: string, 
+  methods?: string[]
 });
 ```
 
 ### Construct Props
 
-| Name | Type | Description |
+| Name | Type | Default | Description |
 | --- | --- | --- |
-| `vpc` | `ec2.IVpc` | Lambda 関数を配置する VPC |
+| `vpc` | `ec2.IVpc` | | Lambda 関数を配置する VPC |
+| `resource?` | `string` | '/' |  API のパス |
+| `methods?` | `string[]` | `['GET']` | API メソッドのリスト |

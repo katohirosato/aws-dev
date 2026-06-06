@@ -59,5 +59,5 @@ const resource = new CustomResourceConstruct(this, 'MyCustomResource', {
 | Name | Type | Description |
 | --- | --- | --- |
 | `vpc` | `ec2.IVpc` | Custom Resource Provider を配置する VPC |
-| `resourceProperties` | `{[key:string]:any}` | Custom Resource Provider に渡す任意のオブジェクト |
+| `resourceProperties?` | `{[key:string]:any}` | Custom Resource Provider に渡す任意のオブジェクト |
 | `resourceType?` | `string` | カスタムリソースのタイプ名（例: `Custom::MyResource`） |

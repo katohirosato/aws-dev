@@ -5,15 +5,15 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 
 export class ApiGateway extends Construct {
   public readonly api: apigateway.LambdaRestApi;
-  constructor(scope: Construct, id: string, props: { handler: lambda.IFunction, resources?: string, methods?: string[] }) {
+  constructor(scope: Construct, id: string, props: { handler: lambda.IFunction, resource?: string, methods?: string[] }) {
     super(scope, id);
     const restapi = new apigateway.LambdaRestApi(this, 'ApiGateway', {
       handler: props.handler,
       proxy: false,
     });
     let resource = restapi.root;
-    if (props.resources) {
-      for (const res of props.resources.split('/')) {
+    if (props.resource) {
+      for (const res of props.resource.split('/')) {
         resource = resource.addResource(res);
       }
     }
@@ -22,6 +22,6 @@ export class ApiGateway extends Construct {
       resource.addMethod(method);
     }
     this.api = restapi;
-    new cdk.CfnOutput(this, 'ApiUrl', { value: restapi.url + (props.resources ? '/' + props.resources : '') });
+    new cdk.CfnOutput(this, 'ApiUrl', { value: restapi.url + (props.resource ? '/' + props.resource : '') });
   }
 }
