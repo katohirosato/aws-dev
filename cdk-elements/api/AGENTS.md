@@ -43,5 +43,5 @@ const api = new ApiConstruct(this, 'Api', {
 | Name | Type | Default | Description |
 | --- | --- | --- |
 | `vpc` | `ec2.IVpc` | | Lambda 関数を配置する VPC |
-| `resource?` | `string` | '/' |  API のパス |
+| `resource?` | `string` | `'/'` |  API のパス |
 | `methods?` | `string[]` | `['GET']` | API メソッドのリスト |
