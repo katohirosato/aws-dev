@@ -10,9 +10,6 @@ export class ApiGateway extends Construct {
       handler: props.handler,
       proxy: false,
     });
-    restapi.root
-      .addResource('resource')
-      .addMethod('GET');
     this.api = restapi;
   }
 }
