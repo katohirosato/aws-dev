@@ -6,7 +6,7 @@ import { CustomResource } from './cr';
 
 export interface CustomResourceConstructProps {
   vpc: ec2.IVpc;
-  resourceProperties: {[key: string]: any};
+  resourceProperties?: {[key: string]: any};
   resourceType?: string;
 }
 
