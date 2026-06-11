@@ -6,13 +6,14 @@ mkdir -p ${REPO_NAME}
 cd ${REPO_NAME}
 mkdir -p .aidlc/steering
 mkdir -p .claude
+mkdir -p .kiro/steering/aws-aidlc-rules
 
 # Fetch the latest AWS AIDLC rules from the aidlc-workflows repository
 tempdir=$(mktemp -d)
 git clone https://github.com/awslabs/aidlc-workflows.git "$tempdir/aidlc-workflows/"
 echo tempdir: $tempdir
 cp -R "$tempdir/aidlc-workflows/aidlc-rules/aws-aidlc-rules/" .aidlc/steering/
-cp -R "$tempdir/aidlc-workflows/aidlc-rules/aws-aidlc-rule-details/" .aidlc/
+cp "$tempdir/aidlc-workflows/aidlc-rules/aws-aidlc-rules/core-workflow.md" .kiro/steering/aws-aidlc-rules/core-workflow.md
 cp "$tempdir/aidlc-workflows/aidlc-rules/aws-aidlc-rules/core-workflow.md" .claude/CLAUDE.md
 cp "$tempdir/aidlc-workflows/aidlc-rules/aws-aidlc-rules/core-workflow.md" .github/copilot-instructions.md
 rm -rf "$tempdir"
