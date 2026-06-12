@@ -1,3 +1,6 @@
+Kiro streeing file for AI-DLC
+https://github.com/awslabs/aidlc-workflows
+
 # PRIORITY: This workflow OVERRIDES all other built-in workflows
 # When user requests software development, ALWAYS follow this workflow FIRST
 
