@@ -1,4 +1,4 @@
-# Custom Resource Template
+# API Gateway Template
 
 AWS CDK で API Gateway を記述するためのテンプレート
 
