@@ -10,8 +10,12 @@ export class ApiConstruct extends Construct {
   public readonly api: apigateway.LambdaRestApi;
   constructor(scope: Construct, id: string, props: { vpc: ec2.IVpc, resource?: string, methods?: string[] }) {
     super(scope, id);
+    const logGroup = new cdk.aws_logs.LogGroup(this, 'LogGroup', {
+      logGroupName: `/${this.node.path}/LogGroup`,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    });
     const role = new Role(this, 'Role');
-    const lambda = new Lambda(this, 'Lambda', { vpc: props.vpc, role: role.role, imageDir: 'lib/api/image/' });
+    const lambda = new Lambda(this, 'Lambda', { vpc: props.vpc, role: role.role, imageDir: 'lib/api/image/', logGroup: logGroup });
     const api = new ApiGateway(this, 'ApiGateway', { handler: lambda.lambdaFunction, resource: props.resource, methods: props.methods });
     this.api = api.api;
   }
