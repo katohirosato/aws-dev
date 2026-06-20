@@ -22,6 +22,6 @@ export class ApiGateway extends Construct {
       resource.addMethod(method);
     }
     this.api = restapi;
-    new cdk.CfnOutput(this, 'ApiUrl', { value: restapi.url + (props.resource ? '/' + props.resource : '') });
+    new cdk.CfnOutput(this, 'ApiUrl', { value: restapi.url + (props.resource ? props.resource : '') });
   }
 }
