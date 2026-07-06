@@ -1,0 +1,9 @@
+[default]
+sso_session = cli
+sso_account_id = 395453697891
+sso_role_name = AdministratorAccess
+region = ap-northeast-1
+[sso-session cli]
+sso_start_url = https://identitycenter.amazonaws.com/ssoins-7758158c6e7e545a
+sso_region = ap-northeast-1
+sso_registration_scopes = sso:account:access
