@@ -17,3 +17,6 @@ cp ~/aidlc-workflows/aidlc-rules/aws-aidlc-rules/core-workflow.md .kiro/steering
 cp ~/aidlc-workflows/aidlc-rules/aws-aidlc-rules/core-workflow.md .claude/CLAUDE.md;
 cp ~/aidlc-workflows/aidlc-rules/aws-aidlc-rules/core-workflow.md .github/copilot-instructions.md;
 cd -;
+
+source .devcontainer/*.bash || true;
+
