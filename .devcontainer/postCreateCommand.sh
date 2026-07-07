@@ -8,7 +8,7 @@ aws configure agent-toolkit --yes --region us-east-1;
 
 cd ~;
 mkdir -p .aidlc/aidlc-rules/;
-mkdir -p .kiro/steering/;
+mkdir -p .kiro/steering/; 
 mkdir -p .claude/;
 mkdir -p .github/;
 git clone https://github.com/awslabs/aidlc-workflows.git;
@@ -17,6 +17,3 @@ cp ~/aidlc-workflows/aidlc-rules/aws-aidlc-rules/core-workflow.md .kiro/steering
 cp ~/aidlc-workflows/aidlc-rules/aws-aidlc-rules/core-workflow.md .claude/CLAUDE.md;
 cp ~/aidlc-workflows/aidlc-rules/aws-aidlc-rules/core-workflow.md .github/copilot-instructions.md;
 cd -;
-
-source .devcontainer/*.bash || true;
-
