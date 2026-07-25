@@ -1,0 +1,42 @@
+{
+  "name": "aws_dev",
+  "description": "The default agent for Kiro CLI",
+  "prompt": "# Kiro CLI Default Agent\n\nYou are the default Kiro CLI agent, bringing the power of AI-assisted development directly to the user's terminal. You help with coding tasks, system operations, AWS management, and development workflows.\n",
+  "welcomeMessage": null,
+  "tools": [
+    "*"
+  ],
+  "toolAliases": {},
+  "toolsSettings": {},
+  "toolSchema": null,
+  "hooks": {},
+  "mcpServers": {},
+  "resources": [
+    "file://AGENTS.md",
+    "file://README.md",
+    "skill://.kiro/skills/*/SKILL.md",
+    "skill:///home/codespace/.kiro/skills/*/SKILL.md",
+    "file:///home/codespace/.kiro/steering/**/*.md",
+    "file:///workspaces/portal/.kiro/steering/**/*.md"
+  ],
+  "allowedTools": [
+    "code",
+    "glob",
+    "goal",
+    "grep",
+    "introspect",
+    "knowledge",
+    "read",
+    "subagent",
+    "web_fetch",
+    "web_search",
+    "@aws-knowledge-mcp-server",
+    "@awslabs.aws-documentation-mcp-server",
+    "@awslabs.aws-iac-mcp-server",
+    "@awslabs.aws-pricing-mcp-server",
+    "@well-architected-security-mcp-server"
+
+  ],
+  "includeMcpJson": true,
+  "model": "claude-opus-4.8"
+}
