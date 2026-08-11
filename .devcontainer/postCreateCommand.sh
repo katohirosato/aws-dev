@@ -4,9 +4,6 @@ npm install --global aws-cdk;
 pip install boto3[crt];
 uv python install 3.10;
 curl -fsSL https://cli.kiro.dev/install | bash;
-sleep 5;
-aws configure agent-toolkit --yes --region us-east-1;
-curl -fsSL 'https://raw.githubusercontent.com/aws/agent-toolkit-for-aws/refs/heads/main/rules/aws-agent-rules.md' -o ~/.kiro/steering/aws-agent-rules.md;
 
 mkdir -p ~/.aidlc/aidlc-rules/;
 mkdir -p ~/.kiro/steering/; 
@@ -17,3 +14,7 @@ cp -R ~/aidlc-workflows/aidlc-rules/aws-aidlc-rule-details/ ~/.aidlc/aidlc-rules
 cp ~/aidlc-workflows/aidlc-rules/aws-aidlc-rules/core-workflow.md ~/.kiro/steering/core-workflow.md;
 cp ~/aidlc-workflows/aidlc-rules/aws-aidlc-rules/core-workflow.md ~/.claude/CLAUDE.md;
 cp ~/aidlc-workflows/aidlc-rules/aws-aidlc-rules/core-workflow.md ~/.github/copilot-instructions.md;
+
+sleep 5;
+aws configure agent-toolkit --yes --region us-east-1;
+curl -fsSL 'https://raw.githubusercontent.com/aws/agent-toolkit-for-aws/refs/heads/main/rules/aws-agent-rules.md' -o ~/.kiro/steering/aws-agent-rules.md;
