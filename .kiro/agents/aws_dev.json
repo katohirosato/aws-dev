@@ -35,7 +35,6 @@
     "@awslabs.aws-iac-mcp-server",
     "@awslabs.aws-pricing-mcp-server",
     "@well-architected-security-mcp-server"
-
   ],
   "includeMcpJson": true,
   "model": "claude-opus-4.8"
