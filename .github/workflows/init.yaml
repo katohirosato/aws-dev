@@ -1,0 +1,52 @@
+name: "Initialize Repository from Template"
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  init:
+    # テンプレートリポジトリ自体では実行しない
+    if: github.repository != 'katohirosato/aws-dev'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v5
+
+      - name: Remove template files
+        run: |
+          files=(
+            "README.md"
+            ".github/workflows/template.yaml"
+            "devcontainer-template.json"
+            "history.sh"
+            "startup.sh"
+            ".devcontainer/config"
+            ".devcontainer/.env"
+          )
+          for f in "${files[@]}"; do
+            if [ -e "$f" ]; then
+              git rm "$f"
+              echo "Removed: $f"
+            fi
+          done
+
+      - name: Remove this workflow
+        run: git rm .github/workflows/init.yaml
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: remove template files"
+            git push
+          else
+            echo "No template files to remove"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
