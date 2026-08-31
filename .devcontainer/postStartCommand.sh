@@ -4,6 +4,7 @@ devcontainer templates apply \
   --omit-paths '[
     ".git/*",
     ".gitignore",
+    ".github/workflows/init.yaml",
     ".github/workflows/template.yaml",
     ".devcontainer/config",
     ".devcontainer/.env",
