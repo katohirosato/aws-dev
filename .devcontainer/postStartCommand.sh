@@ -14,5 +14,7 @@ devcontainer templates apply \
     "README.md",
     "cdk-elements/*"
   ]';
+
+aidlc config --harness kiro;
 git config --global user.name katohirosato
 git config --global user.email hirosato654@gmail.com
