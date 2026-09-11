@@ -31,6 +31,9 @@
         }
     },
     "containerEnv": {"AWS_CONFIG_FILE": "${containerWorkspaceFolder}/.devcontainer/config"},
+    "remoteEnv": {
+        "PATH": "${containerEnv:HOME}/.local/bin:${containerEnv:PATH}"
+    },
     "postCreateCommand": ".devcontainer/postCreateCommand.sh",
     "postStartCommand": ".devcontainer/postStartCommand.sh",
     "postAttachCommand": "aws sso login"
