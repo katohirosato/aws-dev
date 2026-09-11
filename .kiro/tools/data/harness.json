@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "distribution": "kiro",
+  "productName": "Kiro CLI",
+  "configNextStep": "run `kiro-cli chat`, then `/aidlc --doctor`",
+  "name": "kiro",
+  "harnessDir": ".kiro",
+  "rulesSubdir": "steering",
+  "providers": {
+    "schemaVersion": 1,
+    "provider": "amazon-bedrock",
+    "region": "ap-northeast-1",
+    "pendingActions": [
+      {
+        "id": "bedrock-model-access",
+        "status": "done"
+      }
+    ]
+  }
+}
