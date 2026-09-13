@@ -20,10 +20,10 @@
       "resolved": "ghcr.io/devcontainers/features/copilot-cli@sha256:e10d091ae7ef9b8d2ed5f601d75f5a090bc04acbac1a26d4cd3c0d5edde4ea10",
       "integrity": "sha256:e10d091ae7ef9b8d2ed5f601d75f5a090bc04acbac1a26d4cd3c0d5edde4ea10"
     },
-    "ghcr.io/devcontainers/features/docker-in-docker:3.0.1": {
-      "version": "3.0.1",
-      "resolved": "ghcr.io/devcontainers/features/docker-in-docker@sha256:ca2508495b01ba29eba93e8153772a2daa65eaa86471cc6863fe2a3d21933df9",
-      "integrity": "sha256:ca2508495b01ba29eba93e8153772a2daa65eaa86471cc6863fe2a3d21933df9"
+    "ghcr.io/devcontainers/features/docker-in-docker:4.0.0": {
+      "version": "4.0.0",
+      "resolved": "ghcr.io/devcontainers/features/docker-in-docker@sha256:4fa87399214366e320d489991769c4f3f461e1ffe461f54eea78a41b34945bb5",
+      "integrity": "sha256:4fa87399214366e320d489991769c4f3f461e1ffe461f54eea78a41b34945bb5"
     },
     "ghcr.io/devcontainers/features/git-lfs:1": {
       "version": "1.2.5",
