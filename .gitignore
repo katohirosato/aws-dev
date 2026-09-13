@@ -1,3 +1,5 @@
+./devcontainer/.env
+
 # BEGIN AI-DLC:gitignore
 # Logs
 logs

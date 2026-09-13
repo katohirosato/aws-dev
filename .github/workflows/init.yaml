@@ -22,9 +22,11 @@ jobs:
           files=(
             "README.md"
             ".github/workflows/template.yaml"
+            ".github/workflows/init.yaml"
             "devcontainer-template.json"
             "history.sh"
             "startup.sh"
+            "cdk-elements/*"
           )
           for f in "${files[@]}"; do
             if [ -e "$f" ]; then
@@ -32,9 +34,6 @@ jobs:
               echo "Removed: $f"
             fi
           done
-
-      - name: Remove this workflow
-        run: git rm .github/workflows/init.yaml
 
       - name: Commit and push
         run: |
