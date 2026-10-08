@@ -4,6 +4,7 @@
   "productName": "Kiro CLI",
   "configNextStep": "run `kiro-cli chat`, then `/aidlc --doctor`",
   "harnessDir": ".kiro",
+  "onboarding": ".kiro/steering/aidlc-onboarding.md",
   "managedDirectories": [
     ".kiro",
     "aidlc"
@@ -13,10 +14,12 @@
       "path": ".gitignore",
       "policy": "managed-block",
       "marker": "gitignore",
+      "shared": "union",
       "legacySignatures": {
         "wholeFileHashes": [
           "sha256:83449fdda4644b319cbea5dcbde11919722b5dd6761f4edb4caf0e0e53dc9c6b",
-          "sha256:469dbf89f83865b58b2ae4c51dd2f2fe51fd80a9e2033bfb233688141d0cf632"
+          "sha256:469dbf89f83865b58b2ae4c51dd2f2fe51fd80a9e2033bfb233688141d0cf632",
+          "sha256:af1b98a4b8c0e288aa8177655495b4a65220dbed2e149a67780aff1e8f379c9d"
         ]
       }
     },
@@ -24,6 +27,7 @@
       "path": "AGENTS.md",
       "policy": "managed-block",
       "marker": "agents",
+      "shared": "identical",
       "legacySignatures": {
         "wholeFileHashes": [
           "sha256:4f7133cc1a9bb1243245c25c28fad57c3660b35e251ea36cea3aa2db431bf55f",
@@ -35,7 +39,12 @@
           "sha256:e3de4a295f9b9404b40678c28c0773ae432ac8d4aeacc07613ecfcdfbb4c866b",
           "sha256:e85a5d7ce13b676282dc99572f89c81256f2dada50b1881f4c9641e61339f5a4",
           "sha256:67a57eddd94d613590d34ec2d0181398123d9e2d9f6382eb36c62233ce02b6f9",
-          "sha256:39fffe1efc429958449eb6697881322eee8f71beb21061aa15ab72bde3d10126"
+          "sha256:3aea80a2afde8bb2a222b329bcfc2855b4207a53f7fbfbc3abbfb4aadbafc53b",
+          "sha256:1abeb3cb19943bc1537c413dc45298c43a14ce7544444c88c13b53ea48a607a6",
+          "sha256:ecb68f08789258e77c81488e98dd1632b607b567a2424311c4dcdc30ce3e768f",
+          "sha256:9ad7daa07cbafe9f149311b679281eecd991d2ec77787fc7751226ea0622522b",
+          "sha256:c8777a03505f11dcbb4fb339fef1a8072d9d2500ce401b69a06073b523ea2c67",
+          "sha256:6de1298dfa4c2b6916f66d372b844faf23481c8f258eedd595c1423dab8e106d"
         ]
       }
     }
@@ -57,7 +66,7 @@
       "sha256:351061bca6e740761dc75465ceaa8abfad309b631d618319cf4779eec021a98e"
     ],
     ".kiro/agents/aidlc-composer-agent.md": [
-      "sha256:1487636f50d8aeb43870bca2648f074255caad04e00dd13685374f72451108c5"
+      "sha256:2a20804da4534623733e69086885e25961f1f1c3e99daa4d97c94eca5e40bd71"
     ],
     ".kiro/agents/aidlc-delivery-agent.json": [
       "sha256:807848d7f6673ffa320239b8c06be08892388bc983c821488a119e1c9aa2d707"
@@ -90,166 +99,172 @@
       "sha256:7af051196bd952f7dee760fe98d9e0c09dec24fe6f2c84e07087a74f51dc830f"
     ],
     ".kiro/agents/aidlc.json": [
-      "sha256:745a82e9de45172e82b9466dd00e7a8e941ca9e60d66457958f6cd40dd3c14c7"
+      "sha256:be6d0199a86893ac4f6ad41110a9db21044d9e6a1b5ac39cce0b1b37d0b10b3d"
     ],
     ".kiro/aidlc-common/conductor.md": [
-      "sha256:9de6e86060b2590522ccf0155a1de724d797214080c66e6eeeac5cdb5e690b25"
+      "sha256:a266735ba1e48e41455b4281b808d3d6d550d20113f00657284e7a8b158cd9e0"
     ],
     ".kiro/aidlc-common/protocols/stage-definition.md": [
-      "sha256:ecaafcb1e0984a35497c0f23a8c6f4a712c9823fbbd6c078cd327e06aa686a8e"
+      "sha256:a62a0b4d343b43e4238442455ad1fe46105c7392555ec55b70cafff279fae435"
     ],
     ".kiro/aidlc-common/protocols/stage-protocol-construction.md": [
-      "sha256:b87076512e05afe34d4d158e7866292cf11cf2bf3e9621e1ea333430a4abf7df"
+      "sha256:0d4769ad3162b97dabdf7b996b964e9c02a1033fda02d947d332d84ad4eb87f9"
     ],
     ".kiro/aidlc-common/protocols/stage-protocol-ensemble.md": [
-      "sha256:bfac066757fe0f8b7535a585a9ff52af22ba023f1323078d02feb8457a975578"
+      "sha256:97c5a4367ba16e997774ffc18dd1c43f9742538321b1f6be7c5249b246bfb2bc"
+    ],
+    ".kiro/aidlc-common/protocols/stage-protocol-learnings.md": [
+      "sha256:100bd2e916886292b8008476c4029fdc259fd36f1ec54bc6b7fd4a622b583339"
+    ],
+    ".kiro/aidlc-common/protocols/stage-protocol-recovery.md": [
+      "sha256:f14f92f474afc344281e5a06118a96db547d857a879da494eb74a878c93b237f"
     ],
     ".kiro/aidlc-common/protocols/stage-protocol-reviewer.md": [
-      "sha256:a03c409701231388787ff666c19e4b5ea46faa322abf63faa3bcbe1ccc329dda"
+      "sha256:e1c4b3e0aaca13756f4d103636e25a68a199f3665c14ced711051384e50714aa"
     ],
     ".kiro/aidlc-common/protocols/stage-protocol-swarm.md": [
-      "sha256:c379b5a3cf552b4e04879e5d66959919ebe0cff43a7cb274ef22cae562d57e1d"
+      "sha256:b6783a300869a1ccd8fedb58f5ae0cff33e5bce09411c3484a7643748ba493ba"
     ],
     ".kiro/aidlc-common/protocols/stage-protocol.md": [
-      "sha256:ea6b07c17cfe4757c6d9219592acd1e6931d3b4eaa8c53b12be19dbabade7299"
+      "sha256:5fc275e9b61c0870323ae7a91f65572f749df6128cb5dad03dac9e78f97b0f54"
     ],
     ".kiro/aidlc-common/stages/construction/build-and-test.md": [
-      "sha256:dcffe32ae9c9604457293b17828f2ccd4f339fcfa5a1e39e7dd2661e13627f3e"
+      "sha256:bb283f90b12804105a9fc586b07fb6fbeb92a44f20319b302ecdff2819d512bc"
     ],
     ".kiro/aidlc-common/stages/construction/ci-pipeline.md": [
-      "sha256:47848c6e13e67300122c576b8f77c40c175f00c6b690dd408b281e064763e012"
+      "sha256:c81f7d0df3e7cf7c986c0b955b64bf60e3d7024eac720eb46afe1ce030dc4b8e"
     ],
     ".kiro/aidlc-common/stages/construction/code-generation.md": [
-      "sha256:91fcbd023007cc94dfc3d0215750b94be5cd8b306963c630a0c043a068654690"
+      "sha256:feb67a516dc249944056be664102ec017226527b4bf3e76fae58f5b92bd21b75"
     ],
     ".kiro/aidlc-common/stages/construction/functional-design.md": [
-      "sha256:89683858104457807ee04a6a2fe6f9e21b30311ff97ad9aab690986205f6647b"
+      "sha256:4fa729ac52b7e7bda194d5b451ce46350f699d8feecef4b72ed62d9753330302"
     ],
     ".kiro/aidlc-common/stages/construction/infrastructure-design.md": [
-      "sha256:eaac81f2caeaaa740d6df28351c1a73f6209bb15c844fc287abef52d0f1093ce"
+      "sha256:8f3b06bb59c5d59c697094dcbaa27645145f35a3e4f34884c013bb13c4a6a210"
     ],
     ".kiro/aidlc-common/stages/construction/nfr-design.md": [
-      "sha256:eb01cdda69a20b14bcf69712e1ee674b4ef2c563c32a22302e26f6210bb7b6cf"
+      "sha256:f1f2c297fd5270eca13bc3ebddf5ed5958f49449529c44000e25b25a68c3d7f3"
     ],
     ".kiro/aidlc-common/stages/construction/nfr-requirements.md": [
-      "sha256:ace4dfb7eb0f06af854369ef2b443d5409aa5757cbca1b9f31b974c4012e8581"
+      "sha256:8efd300c5486b3c78bea8ebaefd2ee3afb9d880dfd3c2ee3c74280b919ac522f"
     ],
     ".kiro/aidlc-common/stages/ideation/approval-handoff.md": [
-      "sha256:bd1853c763e8683ca6e83f09b43e3b7a7f543a3a78703f0cc6f8a783800722cd"
+      "sha256:9123ae163d810c5c429892f78f9d5bb4bfb4e668e3bf7c1d1d1d59cba3ed3a7b"
     ],
     ".kiro/aidlc-common/stages/ideation/feasibility.md": [
-      "sha256:f1eb323994840e817c12b91d60a231a01c0214a8c729f969f7866b01aa3131d7"
+      "sha256:3a39730788893374b42f1632e4c2fdd3723c5e0bee74dcfa4ff54c1cb3cd0fd2"
     ],
     ".kiro/aidlc-common/stages/ideation/intent-capture.md": [
-      "sha256:af2a48ea08976b9670ef206243550ad18e965d6b50b22900c53027345da4f645"
+      "sha256:f182de541878c13d15b3ce9de93d5618a23c086ef09ad928ec8cc1cb31e52442"
     ],
     ".kiro/aidlc-common/stages/ideation/market-research.md": [
-      "sha256:696aedc65c4793dae3c8bb2e7e017d509c565372eee4b4222c10c2f4b41ddf3a"
+      "sha256:1e798e4b4bc13a9b10cdf4885586f73e91810767b3345c67c11b87ce2e5d5cb8"
     ],
     ".kiro/aidlc-common/stages/ideation/rough-mockups.md": [
-      "sha256:f464e24f76b32e06f2baab33a92f94662677c60db2f8a6bf0b9f55bcab0d5f68"
+      "sha256:ad520c0c77c33c57efc5c2c41671bf268fb53bc076b3a6f4304ca8618bffca4a"
     ],
     ".kiro/aidlc-common/stages/ideation/scope-definition.md": [
-      "sha256:a62a13fd3391b4d00547646a63eb1c28ba350ee02066a6f112ba402bc76723f4"
+      "sha256:4d1731b6de1f69b8ad64429f0fbb823ce24b28a4fb6e96d96958a892e924cb58"
     ],
     ".kiro/aidlc-common/stages/ideation/team-formation.md": [
-      "sha256:a1f00c2af3e6c46f6bbd772370954a8706803dca77dd62fca334ed951c3d0efd"
+      "sha256:ab0f3c0c7fb21aabcd9823b4f3b9e23b7aa0dfd909c17329f6617519080bda12"
     ],
     ".kiro/aidlc-common/stages/inception/contract-design.md": [
-      "sha256:c0b9b757263277f5406a1a11dfcbc6ed079eadb70fd1e179bf0c123ebf9a12e3"
+      "sha256:6f508864321bebc33214f5ff0ec7410e83bdddea892a4321a688bc9c82adc970"
     ],
     ".kiro/aidlc-common/stages/inception/delivery-planning.md": [
-      "sha256:7aad8784eb5d87e2651614d6485f03fb447ec9cf71015eb06d1f49ff5e2f1a4f"
+      "sha256:92d9c37a7ca1a4b83ed5acc47922114933f3f7b19268c1d87462c4ab7071c462"
     ],
     ".kiro/aidlc-common/stages/inception/domain-design.md": [
-      "sha256:f48859f12c67729eb800eac4cb20320c5df319adcec09852ea29f48bd070acb6"
+      "sha256:f7254d65c84b2d3d74381065b9ea60fd4eb9e7788b73220a75f5328de45a3ef3"
     ],
     ".kiro/aidlc-common/stages/inception/practices-discovery.md": [
-      "sha256:e77da7d9f50970a2e645d6d5ff00066d0041b250540ece25b8c058645e26d6fd"
+      "sha256:ba370f8112993fe8b1ffd883ad655593d9541837af76c1e23472441895e2388a"
     ],
     ".kiro/aidlc-common/stages/inception/refined-mockups.md": [
-      "sha256:7b43637ffa35d0524a6627938509fd5fbb7a2fb56717a07154d566f576805365"
+      "sha256:28c422cd34384b23be34665a053517c4e37ee631cb5b48e68ac119c1b5999406"
     ],
     ".kiro/aidlc-common/stages/inception/requirements-analysis.md": [
-      "sha256:5e3862cd9a1efabc1cdbeaa7b1b3ba5d1cc7f1ffacab98ec6290d499406fc061"
+      "sha256:457cdee8323d33d4e14e40701578702372510d680d51c262769702e21e3ab8a2"
     ],
     ".kiro/aidlc-common/stages/inception/reverse-engineering.md": [
-      "sha256:0ef1ddbcbd9799f965b518c95a33e65f32fddab390f7b93b3856ab30a7ae7435"
+      "sha256:59ecf8e135bc9f51c1d94411aae56aa5fb0751e76b303f51dc59db02d70d0260"
     ],
     ".kiro/aidlc-common/stages/inception/units-generation.md": [
-      "sha256:ee2c78fe919f9cabaddb06a5f749e1da98eca6c8a06a757b41cdc78ccf64b483"
+      "sha256:4b8d9a980960d2c10968e2123f85e05121ff1a0e8e1758d36f558f01db18a75c"
     ],
     ".kiro/aidlc-common/stages/inception/user-stories.md": [
-      "sha256:1d451a50f7f533890d8fff248535a379bd4285c390be6aedac533acf924f97bb"
+      "sha256:9b8d8560db051f28b42086fc46d9420b3b22677fb2dbd98b4d503358fee5701b"
     ],
     ".kiro/aidlc-common/stages/initialization/state-init.md": [
-      "sha256:1a2c5c1f7da0e79deb9bea3ad2db2a27e2e57d0fc04835bae8bfb529ea759c4a"
+      "sha256:a15b6834f9b48a4900d57a767d6574110db2853836aef1a1860569d9edbb80e1"
     ],
     ".kiro/aidlc-common/stages/operation/deployment-execution.md": [
-      "sha256:7caf9301027f81ebc6f04d427554056153a33c76679e7acf0b3ec8aec4306e49"
+      "sha256:e30180710e4cb4f58c7c237fb94b37123c7dffba9e53f010da75355873d3f419"
     ],
     ".kiro/aidlc-common/stages/operation/deployment-pipeline.md": [
-      "sha256:02ef775183aca6acb0c73b6fc96e70e06123144b5137cab5672a3884d21ecede"
+      "sha256:6665fdbcb1ce5c8f9ceb553aa2476852867e870194c4bd1d2d2ae4e25c36db35"
     ],
     ".kiro/aidlc-common/stages/operation/environment-provisioning.md": [
-      "sha256:74527f73f8ebbf800cff5876de9d2e8d24736bbf3e6d7487a4f4b23966d78d88"
+      "sha256:ccfed4d48f0c9dd38488a40bed6b01260ecc15d7571159256ba7a0b933b8bc9e"
     ],
     ".kiro/aidlc-common/stages/operation/feedback-optimization.md": [
-      "sha256:c9d25293a1246431d0e554d6e00ee4166a020bdb093220b37aa9db2340bb0c1c"
+      "sha256:38728d39cdcd5fe564616803a2ab65ef5d5c34db2b27c73f5185ce0c8b861ab3"
     ],
     ".kiro/aidlc-common/stages/operation/incident-response.md": [
-      "sha256:19102f40e9437768b5038f6a953e4093cbe9fe6932ed1bbf8dcac6d0ab8987ab"
+      "sha256:cf24aa7e5ba8a35c7897e674cf9ded736ef48a6cad285c1a7fca109420e3b429"
     ],
     ".kiro/aidlc-common/stages/operation/observability-setup.md": [
-      "sha256:03f1228836320ca70364394c17dfe0e14b51ecfd15535a1760f0fbac7bba0cfc"
+      "sha256:7515c4073556a7332ca18e4016364d6fffbbbec5709f87ef7763ded5153e64bd"
     ],
     ".kiro/aidlc-common/stages/operation/performance-validation.md": [
-      "sha256:2359f1ace98522d13b05b75ce603cf2ccd291fb3fa68122255f48520b4bd286d"
+      "sha256:d570318a922e63793a3acc69a201301c16d6d1bef6eaefa9b182f37583146fc7"
     ],
     ".kiro/hooks/aidlc-kiro-adapter.ts": [
-      "sha256:83fbaa48bb85e1da24d28f65a324f4a5b98e9b071bb75e5fcbe69d4af82f0211"
+      "sha256:b6882f536babc637926031d05079cdc25b2b285955f7f13d4489510f176c0c28"
     ],
     ".kiro/hooks/aidlc-plan-approval-guard.kiro.hook": [
       "sha256:794c0ade9c656ac0d8d80d07d5ce32f7dadc6bd4f47419089f50c5f2d30fb731"
     ],
     ".kiro/hooks/aidlc-rebuild-stage-graph.ts": [
-      "sha256:1095d283a5c8f1e468d2fd7287eb0dbef9f22893089b6b71bc63c8bc26afbf0d"
+      "sha256:518ed5a611e01390b4cdd301feb8094deb94771fe834c066b749271ef22e0f6f"
     ],
     ".kiro/hooks/aidlc-record-human-turn.kiro.hook": [
-      "sha256:e46cb26b6390cf97f7e0958fc7e38a1ee3f123ff5d9ac6950838f523f78f3682"
+      "sha256:eef9aebcbfadb2af39627756d0b8f7338c1317f3a9b2e5bbf6f504266abf5539"
     ],
     ".kiro/hooks/aidlc-statusline.ts": [
-      "sha256:506e36d9d8973849b53f5c7421cf09e0f1ae8c12aa53d39bd6c8ba7d18457909"
+      "sha256:97d2775c43e01a8559ffec7cf45bfe9e722122fd008b97ad2910e936f7eef0f4"
     ],
     ".kiro/knowledge/aidlc-pipeline-deploy-agent/branching-strategies.md": [
-      "sha256:f67a8e460fd206f9d98c3f937d94f9e91425eb2dd3420ae797b6d9783afe9829"
+      "sha256:9f21f6a0ff8c1004784115f3cfbb0ae48feb6d58b88199723a07e13b88e24afb"
     ],
     ".kiro/knowledge/aidlc-shared/state-template.md": [
-      "sha256:76b287473b6278f458ff19ffc8721bbc3ddecef13b58750b496b35feab30cfec"
+      "sha256:dabb5d99964031d17ac12e847494c20797418a66cf84573b4a81b6404ef96c99"
     ],
     ".kiro/knowledge/aidlc-shared/worktree-info-schema.md": [
-      "sha256:8838be53d74c84c4a6b8693a6bb3732ddd3ff5f4f4f487b90ef6e83c0c686031"
+      "sha256:415e9639b0e0dc841aff2a6851d7611f2a14361b786dac51dfd7563fef754142"
     ],
     ".kiro/sensors/aidlc-claim-sources.md": [
-      "sha256:5647f4360ce55cc6538bc420685fcbe72a9ed96aab1e2289a19dbe6da56e9513"
+      "sha256:ad4c1fe0a04b960532fbed48e86c89bd291c690cc468e9b78843f4863e80ed51"
     ],
     ".kiro/sensors/aidlc-linter.md": [
-      "sha256:ef4bade8b8d4e37edbd7c192198d59952a11f6964a220b58f7cb368aba73ea6d"
+      "sha256:d913643f6bda910fff80c43b45771ce410233aa9ea52a8341be9771987cbbc0e"
     ],
     ".kiro/sensors/aidlc-required-sections.md": [
-      "sha256:dde35a96a1ac6468cd1ee69b921269ceb4d1a0c94f536cc8309bd9c9e9b533d3"
+      "sha256:ddadf72dddb7fd06cba55a1dbe97e69817030015b470f2d3c20a155fbd22de18"
     ],
     ".kiro/sensors/aidlc-traceability.md": [
       "sha256:4ba0137adeede88843356830f1b39221dbe8b3f72c68033d69ae338bfa389f54"
     ],
     ".kiro/sensors/aidlc-type-check.md": [
-      "sha256:0b8bc58aa593325261caa84d84879908cad3366c8a2412eeaa49435418a43604"
+      "sha256:5eca94cb359eebfa297f66db7b051a2f77ec099459843e15dedddde47d87edb9"
     ],
     ".kiro/sensors/aidlc-upstream-coverage.md": [
       "sha256:dbc8d1f66301963d625209185475d378b99e337d7f15fff32b37167e7c5ab5b2"
     ],
     ".kiro/skills/aidlc/SKILL.md": [
-      "sha256:2116ae073044dcf9882e0e1256af1c583ae5600ac18518c4c64a7d5de8aa693a"
+      "sha256:8b8c722a1f1723a64c44b14373c69985208024d5076cea4766b82896b8759f97"
     ],
     ".kiro/skills/aidlc-approval-handoff/SKILL.md": [
       "sha256:d366b75e51281e1cb441612e9b34db9de8ef5d7cc03b94a6dbc5e9b63f2366f7"
@@ -333,7 +348,7 @@
       "sha256:986ba1d4f18630c0f0c81da5890f3c4eb7e354e5d1df388d139a0c042da83e81"
     ],
     ".kiro/skills/aidlc-outcomes-pack/SKILL.md": [
-      "sha256:235b2f6f3b5d16e5f88c9d5d4fc19476dfe83df4b71b7d93071b81421e856617"
+      "sha256:f3dfb19559f5c2ebebd826926beb38f837fb83f659f60782f8f02acec97a1b5d"
     ],
     ".kiro/skills/aidlc-performance-validation/SKILL.md": [
       "sha256:1f584cd95153efc4305b6e6566195de8de4ca1bc8771027857d424117f1aa5bf"
@@ -345,7 +360,7 @@
       "sha256:200b14a9730f8f844f432ece5ef64a11b4952cc087905820e8307ef67dacc16a"
     ],
     ".kiro/skills/aidlc-replay/SKILL.md": [
-      "sha256:3feaced93b208b379287008ae514ca912c173f3098c46eba10bfeec6dd9dd99d"
+      "sha256:ccffddd49566011ae94b3c080c766168fe73d6783e1159595d943e189b0970ae"
     ],
     ".kiro/skills/aidlc-requirements-analysis/SKILL.md": [
       "sha256:be68cdc1731b96a317fa16fadb8f1810adf71623c95979e342a136b03a07d6b9"
@@ -363,7 +378,7 @@
       "sha256:1038abd40fb2ffff1f9d56a08df62e782a82829947896869ba0a1362e33e4cce"
     ],
     ".kiro/skills/aidlc-session-cost/SKILL.md": [
-      "sha256:54c906c98ab6d8374a529124969930a72e7450714198c3e4d927a4004c5f83e2"
+      "sha256:609b8cbc6de3e149d09c9a403b0edfa5eb44195811abd45c1b2eedec47af8baa"
     ],
     ".kiro/skills/aidlc-team-formation/SKILL.md": [
       "sha256:a673cbcaff4b161e62a5bdc4274805b2f681c6565e1ac541c0233eef92143062"
@@ -374,14 +389,17 @@
     ".kiro/skills/aidlc-user-stories/SKILL.md": [
       "sha256:bee8222308636fe1d0159f279bc3108d4114a00c6b2dfe034f8b2b801c81bc5c"
     ],
+    ".kiro/steering/aidlc-onboarding.md": [
+      "sha256:3a91e5d2e5da0b0234cc62a1f6556b4651cfcb4261a6041ddb54ab7cb788ba0e"
+    ],
     ".kiro/tools/aidlc-command.ts": [
-      "sha256:399780955174b44b6fe46f2df3688279fb5a711fcad688e32dc9e1dca560cb94"
+      "sha256:7296c92f32a3aa75933cd3f57090c4f9ce501576de408debbe4290fcc0f4efb6"
     ],
     ".kiro/tools/aidlc-runtime-paths.ts": [
-      "sha256:551d3193553c30f43270d7621f5aa6886c4e958ff94d5649643c2e97d652f28e"
+      "sha256:6c0271ed1a6439fddee813a7326d3947cec81227be98d927fc418722e3989cdf"
     ],
     ".kiro/tools/data/aidlc-projection.json": [
-      "sha256:648861323be801e15337c6b178516605122c26c61546745e606200d28c1aa2bd"
+      "sha256:c5722b30355c26cfe2acc599f68f8ac6e33a9b6e70434736fc105e9ad2921276"
     ]
   }
 }

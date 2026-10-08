@@ -16,5 +16,6 @@ devcontainer templates apply \
   ]';
 
 aidlc config --harness kiro;
+aidlc config --harness claude;
 git config --global user.name katohirosato
 git config --global user.email hirosato654@gmail.com
