@@ -298,7 +298,7 @@
     ".kiro/tools/aidlc-worktree.ts": "sha256:fe7bfba303be5c2b4e18ea0717f5b35d640ee1070f2725c019e5c4c1edc39ba4",
     ".kiro/tools/aidlc.ts": "sha256:6f5b3fc35752003767555ca7869256288ccd5bac502bda3a7f6999e57ff8ebd5",
     ".kiro/tools/data/agent-tiers.json": "sha256:f975d2b878ed28ed9a3476bbad5e7972d36c35ed7c050f877e870114100ac02a",
-    ".kiro/tools/data/aidlc-manifest.json": "sha256:bc4c813ff82336b672975d2a09f8f96563f67bb63d1f61fb830affa3b64acf81",
+    ".kiro/tools/data/aidlc-manifest.json": "sha256:0f4dd0ba95949ad46b8950070209273749d43f386b49d2a83f4aeda65a488cfe",
     ".kiro/tools/data/aidlc-projection.json": "sha256:6e08d38e368858487c5fb95a553397fda1411a89d890aa49147f13172467ddd0",
     ".kiro/tools/data/aidlc-settings.schema.json": "sha256:f850ca7faecba227899f901e6b42c00d794cce525b2dedb48351af96a343678e",
     ".kiro/tools/data/aidlc-stamp.json": "sha256:384b6ac5ab86798e50fed4df4fcab8dd2dd96fd17028944dbccc8567b8ce1602",

@@ -1,1 +1,0 @@
-../../../.kiro/prompts/lambda-role.md

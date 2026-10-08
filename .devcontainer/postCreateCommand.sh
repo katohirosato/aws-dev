@@ -6,9 +6,11 @@ uv python install 3.10;
 curl -fsSL https://cli.kiro.dev/install | bash;
 npm install -g @openai/codex
 
-curl -fsSL https://github.com/awslabs/aidlc-workflows/releases/latest/download/install.sh | sh;
 
 mkdir -p ~/.kiro/skills
 mkdir -p ~/.claude/skills
 mkdir -p ~/.agents/skills
+
 aws configure agent-toolkit --yes --region us-east-1;
+
+curl -fsSL https://github.com/awslabs/aidlc-workflows/releases/latest/download/install.sh | sh;
