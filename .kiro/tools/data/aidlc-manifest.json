@@ -338,7 +338,7 @@
   "rootContributions": {
     ".gitignore": {
       "policy": "managed-block",
-      "hash": "sha256:2b418d39e46d9eb2c3c538521f2cd62928152fa3954bcf3df9befc0f57c09ec2",
+      "hash": "sha256:367e8d309705cb77f205040d0628e29bd0d3169cdf8e2bf972d05479005aa754",
       "marker": "gitignore"
     },
     "AGENTS.md": {

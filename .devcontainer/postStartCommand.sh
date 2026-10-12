@@ -8,6 +8,7 @@ devcontainer templates apply \
     ".github/workflows/template.yaml",
     ".devcontainer/config",
     ".devcontainer/.env",
+    ".devcontainer/devcontainer-lock.json",
     "devcontainer-template.json",
     "history.sh",
     "startup.sh",
