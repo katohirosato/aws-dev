@@ -142,16 +142,12 @@ export const HARNESS_HONESTY = Object.freeze({
     message:
       "Kiro CLI runs every agent on your session's model and effort, so an effort set here without a model is kept for other tools and changes nothing in Kiro CLI; a preset (minimal, balanced or thorough) sets the session's effort.",
   }),
-  // Kiro uses a delegated agent's own `model` and `effortLevel` (measured on
-  // Kiro CLI 2.31.1 on its v3 engine and Kiro IDE 1.3.0; `effortLevel` is not
-  // in Kiro's documentation). A preset or group dial has no per-agent surface
-  // there.
   "kiro-ide": Object.freeze({
-    model: true,
-    effort: true,
+    model: false,
+    effort: false,
     groupEffort: false,
     message:
-      "Kiro takes a model and an effort set for one agent; a preset or group effort is kept for other tools and changes nothing in Kiro.",
+      "Kiro IDE runs every agent on the model you choose in its model picker, so a model or effort set here is kept for other tools and changes nothing in Kiro IDE.",
   }),
   cursor: Object.freeze({
     model: false,
@@ -169,27 +165,14 @@ export const HARNESS_HONESTY = Object.freeze({
   }),
 });
 
-type HarnessHonesty = {
-  readonly model: boolean;
-  readonly effort: boolean;
-  readonly groupEffort: boolean;
-  readonly message: string;
-};
+type HarnessHonesty = (typeof HARNESS_HONESTY)[ModelHarness];
 
 // Where a harness can pin neither an agent's model nor its effort, every agent
 // runs on the session's model and effort, and nothing AI-DLC records changes
-// that.
+// that. Setup and doctor say so instead of asking for a policy.
 export function sessionSetsAgentModels(harness: ModelHarness): boolean {
   const honesty: HarnessHonesty = HARNESS_HONESTY[harness];
   return !honesty.model && !honesty.effort;
-}
-
-// Where a preset or group dial changes nothing, setup and doctor ask for no
-// policy and name the session as the lever. Kiro CLI is not one: its preset
-// sets the session's effort (aidlc-kiro-session.ts). kiro-ide is: one agent's
-// model and effort apply there, a preset does not.
-export function presetsChangeNothing(harness: ModelHarness): boolean {
-  return harness !== "kiro" && !HARNESS_HONESTY[harness].groupEffort;
 }
 
 // The project folder whose agent files carry a harness's model policy, or null
@@ -198,9 +181,7 @@ export function presetsChangeNothing(harness: ModelHarness): boolean {
 // this, so they never disagree on where a change lands.
 export function modelPolicyAgentsDir(harness: ModelHarness, harnessDir: string): string | null {
   if (harness === "opencode") return ".opencode/agents";
-  if (harness === "claude" || harness === "codex" || harness === "kiro" || harness === "kiro-ide") {
-    return `${harnessDir}/agents`;
-  }
+  if (harness === "claude" || harness === "codex" || harness === "kiro") return `${harnessDir}/agents`;
   return null;
 }
 
@@ -213,7 +194,7 @@ export const HARNESS_PRODUCT_NAMES: Readonly<Record<ModelHarness, string>> = Obj
   copilot: "GitHub Copilot",
   cursor: "Cursor",
   kiro: "Kiro CLI",
-  "kiro-ide": "Kiro",
+  "kiro-ide": "Kiro IDE",
   opencode: "opencode",
 });
 
@@ -224,14 +205,6 @@ export function sessionModelsDetail(
   harness: ModelHarness,
   policy: ModelPolicyRecord | null,
 ): string {
-  if (!sessionSetsAgentModels(harness)) {
-    const shared = policy?.preset
-      ? `; the recorded ${policy.preset} preset does not apply here`
-      : Object.keys(policy?.groups ?? {}).length > 0
-      ? "; the recorded group efforts do not apply here"
-      : "";
-    return `every agent uses your ${HARNESS_PRODUCT_NAMES[harness]} session's model and effort unless a model or effort is set for that agent${shared}`;
-  }
   const recorded = modelPolicyIsEmpty(policy)
     ? ""
     : policy?.preset
@@ -247,15 +220,6 @@ const PROFILE_NAME = /^[a-z0-9][a-z0-9-]*$/;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
-}
-
-// A model id written into an agent file as a bare frontmatter or TOML value:
-// one printable ASCII token that starts with a letter or digit, so it can
-// neither end the line nor start a YAML comment, quote or collection.
-// `config models --model` asks this of a new id, and the kiro-ide writer of a
-// recorded one; a recorded id outside it stays readable, so it can be replaced.
-export function isModelId(value: string): boolean {
-  return /^[A-Za-z0-9][\x21-\x7e]*$/.test(value);
 }
 
 export function isModelEffort(value: string): value is ModelEffort {
@@ -478,25 +442,22 @@ export function resolveModelPolicy(
     : shippedModel !== undefined || shippedEffort !== undefined
     ? "shipped-tier-default"
     : "session-inherit";
-  const honesty: HarnessHonesty = HARNESS_HONESTY[harness];
+  const honesty = HARNESS_HONESTY[harness] as HarnessHonesty;
   const unexpressed: Array<"model" | "effort"> = [];
   let model = shippedModel;
   let effort = shippedEffort;
   let clampedEffort: EffectiveModelPolicy["clampedEffort"];
 
   if (requestedModel !== undefined) {
-    if (honesty.model && (harness !== "kiro-ide" || isModelId(requestedModel))) model = requestedModel;
+    if (honesty.model) model = requestedModel;
     else unexpressed.push("model");
   }
 
   if (requestedEffort !== undefined) {
     const kiroHasModel = harness === "kiro" && model !== undefined;
-    // On kiro-ide only the agent's own effort has a surface (`effortLevel`);
-    // a preset or group dial does not reach an agent that pins only a model.
     const supported = honesty.effort &&
       (honesty.groupEffort || agentPolicy !== undefined || kiroHasModel) &&
-      (harness !== "kiro" || kiroHasModel) &&
-      (harness !== "kiro-ide" || agentPolicy?.effort !== undefined);
+      (harness !== "kiro" || kiroHasModel);
     // On Kiro CLI a preset's effort rides on the session model (the person's
     // personal Kiro settings, see aidlc-kiro-session.ts), not on agents, so a
     // preset alone leaves agents inheriting and is not an unexpressed policy.
@@ -547,13 +508,8 @@ export function serializeAgentTiers(tiers: AgentTiers): string {
   return `${JSON.stringify(Object.fromEntries(Object.entries(tiers).sort()), null, 2)}\n`;
 }
 
-type MarkdownEffortKey = "effort" | "variant" | "effortLevel";
-
 type MarkdownProjectionOptions = {
-  effortKey?: MarkdownEffortKey;
-  // Write the model as a YAML double-quoted string (kiro-ide), so an id YAML
-  // would read as null, a number or a mapping stays the id.
-  quoteModel?: boolean;
+  effortKey?: "effort" | "variant";
   insertBeforeKeys?: readonly string[];
   removeKeys?: readonly string[];
   afterProjectionLines?: readonly string[];
@@ -561,13 +517,10 @@ type MarkdownProjectionOptions = {
 
 function effectiveProjectionLines(
   effective: Pick<EffectiveModelPolicy, "model" | "effort">,
-  effortKey: MarkdownEffortKey,
-  quoteModel = false,
+  effortKey: "effort" | "variant",
 ): string[] {
   return [
-    ...(effective.model !== undefined
-      ? [`model: ${quoteModel ? JSON.stringify(effective.model) : effective.model}`]
-      : []),
+    ...(effective.model !== undefined ? [`model: ${effective.model}`] : []),
     ...(effective.effort !== undefined ? [`${effortKey}: ${effective.effort}`] : []),
   ];
 }
@@ -585,8 +538,6 @@ export function writeMarkdownAgentSurface(
     "model",
     "effort",
     "variant",
-    // Kiro's key; another harness's file keeps a line of that name as it is.
-    ...(effortKey === "effortLevel" ? ["effortLevel"] : []),
     ...(options.removeKeys ?? []),
   ]);
   const source = match[1].split(/\r?\n/);
@@ -606,7 +557,7 @@ export function writeMarkdownAgentSurface(
   }).length;
   const target = Math.max(0, insertAt - removedBefore);
   const projected = [
-    ...effectiveProjectionLines(effective, effortKey, options.quoteModel),
+    ...effectiveProjectionLines(effective, effortKey),
     ...(options.afterProjectionLines ?? []),
   ];
   kept.splice(target, 0, ...projected);
@@ -696,7 +647,6 @@ export function applyModelPolicyToProjection(
   harness: ModelHarness,
   policyValue?: ModelPolicyRecord | null,
   capValue?: Tier | null,
-  written?: string[],
 ): EffectiveModelPolicy[] {
   const harnessRoot = join(projectionRoot, harnessDir);
   const policy = policyValue ?? null;
@@ -709,112 +659,62 @@ export function applyModelPolicyToProjection(
   ).map(([name, tier]) => resolveModelPolicy(policy, name, tier, harness, cap));
   const agentsDir = modelPolicyAgentsDir(harness, harnessDir);
   const agentsRoot = agentsDir === null ? harnessRoot : join(projectionRoot, agentsDir);
-  // Changes the file only where the recorded policy changes it, and says which.
-  const write = (path: string, update: (text: string) => string): void => {
-    const text = readFileSync(path, "utf-8");
-    const next = update(text);
-    if (next === text) return;
-    writeFileSync(path, next);
-    written?.push(path);
-  };
 
   if (harness === "claude") {
     for (const item of effective) {
       const path = join(agentsRoot, `${modelAgentStem(item.agent)}.md`);
       if (!existsSync(path)) throw new Error(`${path}: missing agent surface`);
-      write(path, (text) => writeMarkdownAgentSurface(text, item));
+      writeFileSync(path, writeMarkdownAgentSurface(readFileSync(path, "utf-8"), item));
     }
   } else if (harness === "codex") {
     for (const item of effective) {
       const path = join(agentsRoot, `${modelAgentStem(item.agent)}.toml`);
       if (!existsSync(path)) throw new Error(`${path}: missing agent surface`);
-      write(path, (text) => writeCodexAgentSurface(text, item));
+      writeFileSync(path, writeCodexAgentSurface(readFileSync(path, "utf-8"), item));
     }
   } else if (harness === "opencode") {
     for (const item of effective) {
       const path = join(agentsRoot, `${modelAgentStem(item.agent)}.md`);
       if (!existsSync(path)) throw new Error(`${path}: missing agent surface`);
-      write(path, (text) =>
-        writeMarkdownAgentSurface(text, item, {
+      writeFileSync(
+        path,
+        writeMarkdownAgentSurface(readFileSync(path, "utf-8"), item, {
           effortKey: "variant",
           insertBeforeKeys: ["mode"],
-        }));
-    }
-  } else if (harness === "kiro-ide") {
-    // Kiro reads `model` and `effortLevel` from the agent at each dispatch; the
-    // conductor (aidlc-aidlc.md) has no tier and is never written.
-    for (const item of effective) {
-      const path = join(agentsRoot, `${modelAgentStem(item.agent)}.md`);
-      if (!existsSync(path)) throw new Error(`${path}: missing agent surface`);
-      write(path, (text) => writeMarkdownAgentSurface(text, item, { effortKey: "effortLevel", quoteModel: true }));
+        }),
+      );
     }
   } else if (harness === "kiro") {
     const modelEfforts: Array<{ model: string; effort: KiroEffort }> = [];
     for (const item of effective) {
       const path = join(agentsRoot, `${modelAgentStem(item.agent)}.json`);
       if (!existsSync(path)) throw new Error(`${path}: missing agent surface`);
-      write(path, (text) => writeKiroAgentSurface(text, item));
+      writeFileSync(path, writeKiroAgentSurface(readFileSync(path, "utf-8"), item));
       if (item.model && item.effort) {
         modelEfforts.push({ model: item.model, effort: item.effort });
       }
     }
     const path = join(harnessRoot, "settings", "cli.json");
     if (!existsSync(path)) throw new Error(`${path}: missing Kiro CLI settings`);
-    write(path, (text) => writeKiroCliSurface(text, modelEfforts, cap));
+    writeFileSync(
+      path,
+      writeKiroCliSurface(readFileSync(path, "utf-8"), modelEfforts, cap),
+    );
   }
   return effective;
 }
 
 function markdownSurfaceValues(
   content: string,
-  effortKey: MarkdownEffortKey,
+  effortKey: "effort" | "variant",
 ): { model?: string; effort?: ModelEffort } {
   const fm = content.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? "";
-  const raw = /^model:\s*("(?:[^"\\]|\\.)*"|\S+)\s*$/m.exec(fm)?.[1];
-  let model = raw;
-  if (raw?.startsWith('"')) {
-    try {
-      model = JSON.parse(raw) as string;
-    } catch {
-      model = raw;
-    }
-  }
+  const model = /^model:\s*(\S+)\s*$/m.exec(fm)?.[1];
   const effort = new RegExp(`^${effortKey}:\\s*(\\S+)\\s*$`, "m").exec(fm)?.[1];
   return {
     ...(model ? { model } : {}),
     ...(effort && isModelEffort(effort) ? { effort } : {}),
   };
-}
-
-// The kiro-ide agents whose staged file carries a `model:` or `effortLevel:`
-// value the project's own file does not, with the staged values. A model or
-// effort recorded for one agent while Kiro took none (an effort is shared by
-// every tool) starts to apply in the run that writes it.
-export function kiroAgentPinsAdded(
-  projectDir: string,
-  stagedRoot: string,
-  harnessDir: string,
-): Array<{ agent: string; path: string; model?: string; effort?: ModelEffort }> {
-  const added: Array<{ agent: string; path: string; model?: string; effort?: ModelEffort }> = [];
-  for (const name of Object.keys(readAgentTiers(join(stagedRoot, harnessDir))).sort()) {
-    const path = `${harnessDir}/agents/${modelAgentStem(name)}.md`;
-    const staged = join(stagedRoot, path);
-    if (!existsSync(staged)) continue;
-    const next = markdownSurfaceValues(readFileSync(staged, "utf-8"), "effortLevel");
-    if (next.model === undefined && next.effort === undefined) continue;
-    const installed = join(projectDir, path);
-    const before = existsSync(installed) ? markdownSurfaceValues(readFileSync(installed, "utf-8"), "effortLevel") : {};
-    const model = next.model !== before.model ? next.model : undefined;
-    const effort = next.effort !== before.effort ? next.effort : undefined;
-    if (model === undefined && effort === undefined) continue;
-    added.push({
-      agent: name,
-      path,
-      ...(model !== undefined ? { model } : {}),
-      ...(effort !== undefined ? { effort } : {}),
-    });
-  }
-  return added;
 }
 
 function codexSurfaceValues(content: string): { model?: string; effort?: ModelEffort } {
@@ -840,25 +740,11 @@ function valuesDiffer(
   return issues;
 }
 
-// Efforts (preset, group dials, per-agent) are shared by every harness, so
-// on a harness where a preset changes nothing they are someone else's
-// policy, not a problem here. A model recorded for this harness by name
-// still is: someone asked for exactly that. Doctor and `config models
-// --check` both count what this returns.
-function reportedUnexpressed(
-  effective: EffectiveModelPolicy,
-  sessionSet: boolean,
-): Array<"model" | "effort"> {
-  return effective.unexpressed.filter((field) => !(sessionSet && field === "effort"));
-}
-
 export function modelPolicySurfaceDrift(
   projectDir: string,
   harnessDir: string,
   harness: ModelHarness,
   policyValue: ModelPolicyRecord | null,
-  // Also list the policy this harness cannot express, not only file mismatches.
-  includeUnexpressed = true,
 ): string[] {
   const harnessRoot = join(projectDir, harnessDir);
   const agentsDir = modelPolicyAgentsDir(harness, harnessDir);
@@ -867,9 +753,6 @@ export function modelPolicySurfaceDrift(
   const tiers = readAgentTiers(harnessRoot);
   const cap = resolveTierCap(join(projectDir, "aidlc", "spaces", "default", "memory"));
   const issues: string[] = [];
-  // Doctor's rule: where a preset changes nothing, a shared effort is the
-  // session's, not drift.
-  const sessionSet = presetsChangeNothing(harness);
   const expectedByAgent = Object.fromEntries(
     Object.entries(tiers).map(([name, tier]) => [
       name,
@@ -894,10 +777,8 @@ export function modelPolicySurfaceDrift(
     const surfaceExpected = harness === "kiro" && expected.model && kiroCollapsed[expected.model]
       ? { ...expected, effort: kiroCollapsed[expected.model] }
       : expected;
-    if (includeUnexpressed) {
-      for (const field of reportedUnexpressed(expected, sessionSet)) {
-        issues.push(`${name}: ${field} policy is not expressible on ${harness}`);
-      }
+    for (const field of expected.unexpressed) {
+      issues.push(`${name}: ${field} policy is not expressible on ${harness}`);
     }
     let path = "";
     let actual: { model?: string; effort?: ModelEffort } = {};
@@ -910,9 +791,6 @@ export function modelPolicySurfaceDrift(
     } else if (harness === "opencode") {
       path = join(agentsRoot, `${modelAgentStem(name)}.md`);
       if (existsSync(path)) actual = markdownSurfaceValues(readFileSync(path, "utf-8"), "variant");
-    } else if (harness === "kiro-ide") {
-      path = join(agentsRoot, `${modelAgentStem(name)}.md`);
-      if (existsSync(path)) actual = markdownSurfaceValues(readFileSync(path, "utf-8"), "effortLevel");
     } else if (harness === "kiro") {
       path = join(agentsRoot, `${modelAgentStem(name)}.json`);
       if (existsSync(path)) {
@@ -959,10 +837,15 @@ export function modelPolicyDoctorIssues(
     .filter((name) => !(name in tiers))
     .map((name) => `orphaned agent exception: ${name}`);
   const cap = resolveTierCap(join(harnessRoot, "..", "aidlc", "spaces", "default", "memory"));
-  const sessionSet = presetsChangeNothing(harness);
+  // Efforts (preset, group dials, per-agent) are shared by every harness, so
+  // on a harness where the session sets every agent they are someone else's
+  // policy, not a problem here. A model recorded for this harness by name
+  // still is: someone asked for exactly that.
+  const sessionSet = sessionSetsAgentModels(harness);
   for (const [name, tier] of Object.entries(tiers)) {
     const effective = resolveModelPolicy(policy, name, tier, harness, cap);
-    for (const field of reportedUnexpressed(effective, sessionSet)) {
+    for (const field of effective.unexpressed) {
+      if (sessionSet && field === "effort") continue;
       issues.push(`${name}: ${field} policy is not expressible on ${harness}`);
     }
   }
@@ -974,8 +857,6 @@ export function harnessHonestyNotes(
   tiers: AgentTiers,
   harness: ModelHarness,
   cap: Tier | null = null,
-  // How the person runs `config models <args>` in this project.
-  command: (args: string) => string = (args) => `aidlc config models ${args}`,
 ): string[] {
   const effective = Object.entries(tiers).map(([name, tier]) =>
     resolveModelPolicy(policy, name, tier, harness, cap)
@@ -983,17 +864,6 @@ export function harnessHonestyNotes(
   const notes: string[] = [];
   if (effective.some((item) => item.unexpressed.length > 0)) {
     notes.push(HARNESS_HONESTY[harness].message);
-  }
-  // A recorded kiro-ide id that is not one plain id is never written; name it,
-  // so the person sets it again rather than reading the line above as Kiro's.
-  if (harness === "kiro-ide") {
-    for (const [name, own] of Object.entries(normalizeModelPolicy(policy)?.agents ?? {}).sort()) {
-      if (own.model !== undefined && !isModelId(own.model)) {
-        notes.push(
-          `The model id recorded for ${name} is not one plain id, so it is not written; set it again with \`${command(`--agent ${name} --model <id>`)}\`.`,
-        );
-      }
-    }
   }
   for (const item of effective) {
     if (item.clampedEffort) {

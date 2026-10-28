@@ -35,7 +35,7 @@ import { AIDLC_VERSION } from "./aidlc-version.ts";
 // The StatsD metric-name namespace. AIDLC_METRICS_PREFIX overrides the default
 // "aidlc"; an empty/whitespace value falls back to "aidlc". Sanitised to a
 // StatsD-safe token (StatsD metric names allow alnum, `.`, `_`, `-`). Dots are
-// KEPT so a caller can namespace as e.g. "myorg.aidlc".
+// KEPT so a caller can namespace as e.g. "myorg.aidlc". Pure.
 export function metricPrefix(): string {
   const raw = (process.env.AIDLC_METRICS_PREFIX ?? "").trim();
   const p = raw || "aidlc";
@@ -118,6 +118,7 @@ function resolveContext(
 // ---------------------------------------------------------------------------
 
 function toMetricName(eventType: string, prefix: string): string {
+  // STAGE_STARTED => <prefix>.stage_started
   return `${prefix}.${eventType.toLowerCase()}`;
 }
 
@@ -149,7 +150,7 @@ function buildStatsdLine(metricName: string, ctx: MetricContext): string {
 // ---------------------------------------------------------------------------
 // Magnitude lines - token/cost gauges + counters
 //
-// Alongside the `:1|c` counter, STAGE_COMPLETED / WORKFLOW_COMPLETED
+// Alongside the unchanged `:1|c` counter, STAGE_COMPLETED / WORKFLOW_COMPLETED
 // carry the per-stage usage rollup aidlc-state.ts merged into their audit
 // `fields`. This turns those pre-computed field STRINGS into StatsD magnitude
 // lines so tokens and spend can be graphed. Purely string parsing - NO
@@ -246,7 +247,7 @@ function parseTokenBreakdown(
 // cost gauges, and the `Tokens By Model` / `Tokens By Agent` breakdowns emit
 // per-model / per-agent TOKEN counters, each with an extra `model:<x>` /
 // `agent:<x>` tag. The token counters cover input, output, cache.read AND
-// cache.write. An event WITHOUT any parseable aggregate usage fields => `[]`, so
+// cache.write. An event WITHOUT usage fields (i.e. no `Tokens In`) => `[]`, so
 // ordinary events emit only their counter line. Purely string parsing - no I/O,
 // no ledger read.
 export function buildMagnitudeLines(
@@ -451,11 +452,11 @@ export function emitMetricForAuditEvent(
   try {
     const prefix = metricPrefix();
     const ctx = resolveContext(fields, projectDir);
-    // The per-event counter line, plus any token/cost magnitude lines
+    // The unchanged per-event counter line, plus any token/cost magnitude lines
     // when this event carries the usage rollup fields (STAGE/WORKFLOW_COMPLETED).
     // All lines share the event's tags and are POSTed together - a single
-    // newline-separated StatsD body keeps this one detached spawn,
-    // with network I/O in the worker rather than under the audit lock.
+    // newline-separated StatsD body keeps this one detached spawn, still
+    // microsecond-cheap under the audit lock (string parsing only, no I/O).
     const lines = [buildStatsdLine(toMetricName(eventType, prefix), ctx)];
     lines.push(...buildMagnitudeLines(eventType, fields, buildTagString(ctx), prefix));
     postMetric(metricsEndpoint, lines.join("\n"));

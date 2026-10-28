@@ -30,7 +30,6 @@ import {
 } from "./aidlc-plugin-build.ts";
 import {
   buildPluginProjection,
-  PluginBuildLockFolderError,
   type PluginTarget,
   type PluginTargetTable,
   readPluginTargets,
@@ -44,7 +43,7 @@ import {
 } from "./aidlc-plugin-validate.ts";
 
 const USAGE =
-  "Usage: bun <tools-dir>/aidlc-plugin-test.ts <plugin-root> --install <project-root> [--harness <name>] [--with <base-root>] [--json]";
+  "Usage: bun <tools-dir>/aidlc-plugin-test.ts <plugin-root> --install <project-root> [--harness <name>] [--json]";
 const SUBPROCESS_TIMEOUT_MS = LONG_SUBPROCESS_TIMEOUT_MS;
 
 export interface PluginComposeRunOptions {
@@ -92,9 +91,6 @@ export interface TestPluginOptions {
   pluginRoot: string;
   installRoot: string;
   harness?: string;
-  // The author's own checkout of the base plugin, composed into the candidate
-  // first, as sync composes bases first.
-  baseRoot?: string;
   targetsPath?: string;
   templateHooksDir?: string;
 }
@@ -536,7 +532,7 @@ export function testPluginComposition(
 ): PluginTestResult {
   const pluginRoot = resolve(options.pluginRoot);
   const installRoot = resolve(options.installRoot);
-  const validation = validatePluginRoot(pluginRoot, { baseRoot: options.baseRoot });
+  const validation = validatePluginRoot(pluginRoot);
   const logicalPluginName = pluginName(pluginRoot);
   const emptyGraph: PluginGraphTestResult = {
     compiled: false,
@@ -591,53 +587,20 @@ export function testPluginComposition(
         "Pass an install root containing the selected harness tree.",
       );
     } else {
-      const templateHooksDir =
-        options.templateHooksDir ?? bundledPluginHookTemplatesDir();
-      const { pluginRoot: builtRoot } = buildPluginProjection({
+      buildPluginProjection({
         pluginRoot,
         target,
         outDir: projectionRoot,
-        templateHooksDir,
+        templateHooksDir:
+          options.templateHooksDir ??
+          bundledPluginHookTemplatesDir(),
       });
-      if (options.baseRoot !== undefined) {
-        const baseRoot = resolve(options.baseRoot);
-        const { pluginRoot: baseBuilt } = buildPluginProjection({
-          pluginRoot: baseRoot,
-          target,
-          outDir: join(workRoot, "base-projection"),
-          templateHooksDir,
-        });
-        const base = runPluginCompose({
-          harness,
-          harnessLeaf: target.harnessLeaf,
-          projectDir: candidateRoot,
-          pluginBuilt: baseBuilt,
-        });
-        if (base.status !== 0) {
-          addTestError(
-            validation,
-            baseRoot,
-            "test-compose",
-            `the base's compose exited ${base.status}: ${base.stderr || base.stdout}`,
-            "Fix the base plugin's compose failure, or pass a working checkout of it to --with.",
-          );
-        }
-        for (const drop of readPluginDropEntries(candidateRoot, pluginName(baseRoot))) {
-          addTestError(
-            validation,
-            drop.file,
-            "test-compose-drop",
-            `[${drop.severity}] ${drop.message}`,
-            "The base plugin's compose dropped this; fix it in the base, or pass a working checkout of it to --with.",
-          );
-        }
-      }
       const beforeCompose = snapshotWholeTree(candidateRoot);
       const first = runPluginCompose({
         harness,
         harnessLeaf: target.harnessLeaf,
         projectDir: candidateRoot,
-        pluginBuilt: builtRoot,
+        pluginBuilt: projectionRoot,
       });
       if (first.status !== 0) {
         addTestError(
@@ -705,7 +668,7 @@ export function testPluginComposition(
         harness,
         harnessLeaf: target.harnessLeaf,
         projectDir: candidateRoot,
-        pluginBuilt: builtRoot,
+        pluginBuilt: projectionRoot,
       });
       const secondDrops = readPluginDropEntries(
         candidateRoot,
@@ -739,9 +702,7 @@ export function testPluginComposition(
       ".",
       "test-compose",
       error instanceof Error ? error.message : String(error),
-      error instanceof PluginBuildLockFolderError
-        ? error.fix
-        : "Fix the plugin or install candidate inputs and rerun.",
+      "Fix the plugin or install candidate inputs and rerun.",
     );
   } finally {
     const liveAfter = snapshotPaths(
@@ -828,7 +789,6 @@ type ParsedArgs = {
   pluginRoot: string;
   installRoot: string;
   harness?: string;
-  baseRoot?: string;
   json: boolean;
 };
 
@@ -841,7 +801,6 @@ function parseArgs(argv: string[]): ParsedArgs {
   let pluginRoot = "";
   let installRoot = "";
   let harness: string | undefined;
-  let baseRoot: string | undefined;
   let json = false;
   for (let index = 0; index < argv.length; index++) {
     const arg = argv[index];
@@ -850,14 +809,13 @@ function parseArgs(argv: string[]): ParsedArgs {
       json = true;
       continue;
     }
-    if (arg === "--install" || arg === "--harness" || arg === "--with") {
+    if (arg === "--install" || arg === "--harness") {
       const value = argv[++index];
       if (!value || value.startsWith("--")) {
         throw new PluginTestUsageError(`${arg} requires a value`);
       }
       if (arg === "--install") installRoot = value;
-      else if (arg === "--harness") harness = value;
-      else baseRoot = resolve(value);
+      else harness = value;
       continue;
     }
     if (arg.startsWith("--")) {
@@ -879,7 +837,6 @@ function parseArgs(argv: string[]): ParsedArgs {
     pluginRoot: resolve(pluginRoot),
     installRoot: resolve(installRoot),
     harness,
-    baseRoot,
     json,
   };
 }
@@ -905,7 +862,6 @@ export function main(argv: string[]): number {
       pluginRoot: args.pluginRoot,
       installRoot: args.installRoot,
       harness: args.harness,
-      baseRoot: args.baseRoot,
     });
     if (args.json) {
       process.stdout.write(`${JSON.stringify(pluginTestJson(result))}\n`);

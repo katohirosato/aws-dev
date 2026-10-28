@@ -12,11 +12,9 @@ import {
 } from "node:path";
 import {
   buildPluginProjection,
-  PluginBuildLockFolderError,
   readPluginTargets,
 } from "./aidlc-plugin-emit.ts";
 import {
-  bundledPluginData,
   formatPluginValidation,
   type PluginValidationFinding,
   type PluginValidationResult,
@@ -28,17 +26,29 @@ const USAGE =
   "Usage: bun <tools-dir>/aidlc-plugin-build.ts <plugin-root> <harness> [outDir] [--json]";
 
 export function bundledPluginTargetsPath(): string {
-  return bundledPluginData(
-    ["plugin-targets.json"],
-    join(import.meta.dir, "..", "..", "dist", "claude", ".claude", "tools", "data", "plugin-targets.json"),
-  );
+  const candidates = [
+    join(import.meta.dir, "data", "plugin-targets.json"),
+    join(
+      import.meta.dir,
+      "..",
+      "..",
+      "dist",
+      "claude",
+      ".claude",
+      "tools",
+      "data",
+      "plugin-targets.json",
+    ),
+  ];
+  return candidates.find(existsSync) ?? candidates[0];
 }
 
 export function bundledPluginHookTemplatesDir(): string {
-  return bundledPluginData(
-    ["plugin-hooks-template"],
+  const candidates = [
+    join(import.meta.dir, "data", "plugin-hooks-template"),
     join(import.meta.dir, "..", "..", "scripts", "plugin-hooks-template"),
-  );
+  ];
+  return candidates.find(existsSync) ?? candidates[0];
 }
 
 function withBuildError(
@@ -196,9 +206,7 @@ export function main(argv: string[]): number {
       outDir,
       "build-output",
       error instanceof Error ? error.message : String(error),
-      error instanceof PluginBuildLockFolderError
-        ? error.fix
-        : "Choose a fresh output directory or correct the plugin source and retry.",
+      "Choose a fresh output directory or correct the plugin source and retry.",
     );
   }
 

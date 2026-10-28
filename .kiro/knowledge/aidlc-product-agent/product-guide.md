@@ -60,7 +60,7 @@ The MVP must:
 5. Meet minimum NFRs for security and data integrity
 6. Be demonstrable to stakeholders in under 10 minutes
 
-## Delivery Planning Structure
+## Workflow Planning Structure
 
 Organize stories into iterations:
 ```
