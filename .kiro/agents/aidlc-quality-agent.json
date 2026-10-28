@@ -63,11 +63,6 @@
         "aidlc config flags --clear-bypass AIDLC_DISABLE_SENSORS --yes",
         "aidlc config flags --clear-bypass AIDLC_DISABLE_LEARNINGS --yes",
         "aidlc config flags --clear-bypass AIDLC_DISABLE_SUMMARY_CONFIRMATION --yes"
-      ],
-      "deniedCommands": [
-        "([^\\s]*/)?rm( [^\\s]+)* -[A-Za-z]*[rR][A-Za-z]*( .*)?",
-        "([^\\s]*/)?rm( [^\\s]+)* --recursive( .*)?",
-        "([^\\s]*/)?git( -[^\\s]+( (\"[^\"]*\"|'[^']*'|[^\\s]+))?)* push( .*)?"
       ]
     },
     "fs_write": {
@@ -79,41 +74,45 @@
   "resources": [
     "file://.kiro/agents/aidlc-quality-agent.md",
     "file://.kiro/knowledge/aidlc-quality-agent/*.md",
-    "file://.kiro/knowledge/aidlc-shared/*.md",
-    "file://aidlc/spaces/default/memory/**/*.md"
+    "file://.kiro/knowledge/aidlc-shared/adding-a-repo.md",
+    "file://.kiro/knowledge/aidlc-shared/ai-dlc-principles.md",
+    "file://.kiro/knowledge/aidlc-shared/brownfield.md",
+    "file://.kiro/knowledge/aidlc-shared/rules-reading.md",
+    "file://.kiro/knowledge/aidlc-shared/verification.md",
+    "file://aidlc/active-memory/**/*.md"
   ],
   "hooks": {
     "preToolUse": [
       {
         "matcher": "execute_bash",
-        "command": "aidlc engine adapter kiro state-transition-guard aidlc-quality-agent",
+        "command": "aidlc engine adapter kiro state-transition-guard aidlc-quality-agent; exit $LASTEXITCODE",
         "timeout_ms": 1800000
       },
       {
         "matcher": "fs_write",
-        "command": "aidlc engine adapter kiro review-freeze",
+        "command": "aidlc engine adapter kiro review-freeze; exit $LASTEXITCODE",
         "timeout_ms": 1800000
       },
       {
         "matcher": "execute_bash",
-        "command": "aidlc engine adapter kiro review-freeze",
+        "command": "aidlc engine adapter kiro review-freeze; exit $LASTEXITCODE",
         "timeout_ms": 1800000
       },
       {
         "matcher": "fs_write",
-        "command": "aidlc engine adapter kiro plan-approval-guard",
+        "command": "aidlc engine adapter kiro plan-approval-guard; exit $LASTEXITCODE",
         "timeout_ms": 1800000
       },
       {
         "matcher": "execute_bash",
-        "command": "aidlc engine adapter kiro plan-approval-guard",
+        "command": "aidlc engine adapter kiro plan-approval-guard; exit $LASTEXITCODE",
         "timeout_ms": 1800000
       }
     ],
     "postToolUse": [
       {
         "matcher": "fs_write",
-        "command": "aidlc engine adapter kiro audit-and-sensors",
+        "command": "aidlc engine adapter kiro audit-and-sensors; exit $LASTEXITCODE",
         "timeout_ms": 3600000
       }
     ]
