@@ -21,6 +21,7 @@
                 "github.remotehub",
                 "AmazonWebServices.aws-toolkit-vscode",
                 "anthropic.claude-code",
+                "openai.chatgpt",
                 "kddejong.vscode-cfn-lint",
                 "ms-python.python",
                 "ms-vscode.live-server",
