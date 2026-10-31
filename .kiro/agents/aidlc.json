@@ -1,15 +1,20 @@
 {
-  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
   "name": "aidlc",
   "description": "AI-DLC conductor agent — run /aidlc to start or resume a workflow",
-  "prompt": "You are a software development assistant in a project that uses AI-DLC (AI-Driven Development Life Cycle). When the user invokes /aidlc (or asks to start, resume, or manage an AI-DLC workflow), follow the aidlc skill exactly: it defines the forwarding loop and the engine that owns all routing. Kiro's `/` menu can turn the person's `/aidlc` into one of AI-DLC's own specialists (`/aidlc-architect-agent`, `/aidlc-developer-agent` and the other `/aidlc-...-agent` names), which a person never starts: when their whole message is one of those, treat it as `/aidlc` with nothing after it, and say nothing about it. CRITICAL forwarding rules, which override any instinct to make progress yourself: (1) The engine binary aidlc-orchestrate.ts is the ONLY authority on the next move: run it, do EXACTLY what its single directive says, then report; never re-derive routing. (2) Your VERY FIRST action: append everything the user typed after /aidlc to the first `next` call unchanged: `/aidlc --phase ideation` MUST become `next --phase ideation`, never a bare `next`; dropping --phase/--stage sends the workflow to the wrong stage and is a bug. (3) When a directive is a print whose message names a command to run (e.g. aidlc-jump.ts execute ...), run THAT EXACT command as your immediate next tool call; do NOT run `next` again or read more files until it has run. Skipping the named command silently breaks the workflow. Outside of AI-DLC workflows, assist normally.",
+  "prompt": "You are a software development assistant in a project that uses AI-DLC (AI-Driven Development Life Cycle). When the user invokes /aidlc (or asks to start, resume, or manage an AI-DLC workflow), follow the aidlc skill exactly. Always, from the first message: (1) the aidlc skill (.kiro/skills/aidlc/SKILL.md) and the two files beside it (question-rendering.md and composer.md) are in your context from the start of this chat: follow them, and never read them with your file tool; read every other AI-DLC file they send you to (a protocol module, a stage file) with your file tool in parts of at most 200 lines, to its last line; (2) say the lines AI-DLC gives you for the person (its warnings, notices and questions) to them word for word; (3) a question AI-DLC puts to the person is theirs to answer, never yours, while a step AI-DLC hands you (a command to run, a label to choose) is yours to do without asking them; (4) never guess who changed a file, and never call a person's change stray or a mistake; (5) run AI-DLC's commands as written and read their reply from the command's result: never send it to a file. Kiro's `/` menu can turn the person's `/aidlc` into one of AI-DLC's own specialists (`/aidlc-architect-agent`, `/aidlc-developer-agent` and the other `/aidlc-...-agent` names), which a person never starts: when their whole message is one of those, treat it as `/aidlc` with nothing after it, and say nothing about it. Outside of AI-DLC workflows, assist normally.",
+  "includeMcpJson": true,
   "tools": [
-    "fs_read",
-    "fs_write",
-    "execute_bash",
-    "todo_list",
+    "@aws-iac",
+    "@aws-mcp",
+    "@aws-pricing",
+    "@aws-serverless",
+    "@context7",
+    "read",
+    "shell",
+    "subagent",
     "thinking",
-    "subagent"
+    "todo_list",
+    "write"
   ],
   "allowedTools": [
     "fs_read",
@@ -61,11 +66,6 @@
         "aidlc config flags --clear-bypass AIDLC_DISABLE_SENSORS --yes",
         "aidlc config flags --clear-bypass AIDLC_DISABLE_LEARNINGS --yes",
         "aidlc config flags --clear-bypass AIDLC_DISABLE_SUMMARY_CONFIRMATION --yes"
-      ],
-      "deniedCommands": [
-        "([^\\s]*/)?rm( [^\\s]+)* -[A-Za-z]*[rR][A-Za-z]*( .*)?",
-        "([^\\s]*/)?rm( [^\\s]+)* --recursive( .*)?",
-        "([^\\s]*/)?git( -[^\\s]+( (\"[^\"]*\"|'[^']*'|[^\\s]+))?)* push( .*)?"
       ]
     },
     "fs_write": {
@@ -73,8 +73,9 @@
         "aidlc/spaces/**",
         ".kiro/sensors/**",
         "aidlc/.aidlc-compose-pending",
-        "[!.]*",
-        "[!.]*/**"
+        "./[!.]*",
+        "[!.]*/**",
+        ".aidlc/worktrees/*/aidlc/spaces/**"
       ]
     },
     "subagent": {
@@ -98,92 +99,257 @@
   },
   "resources": [
     "skill://.kiro/skills/*/SKILL.md",
+    "file://.kiro/skills/aidlc/SKILL.md",
+    "file://.kiro/skills/aidlc/question-rendering.md",
+    "file://.kiro/skills/aidlc/composer.md",
     "file://.kiro/steering/aidlc-onboarding.md",
-    "file://aidlc/spaces/default/memory/**/*.md",
+    "file://aidlc/active-memory/**/*.md",
     "file://AGENTS.md"
   ],
-  "hooks": {
-    "agentSpawn": [
+  "hooks": [
+    {
+      "name": "agentSpawn-0",
+      "trigger": "agentSpawn",
+      "action": {
+        "type": "command",
+        "command": "aidlc engine adapter kiro session-start; exit $LASTEXITCODE"
+      },
+      "timeout": 1800
+    },
+    {
+      "name": "postToolUse-0",
+      "trigger": "postToolUse",
+      "matcher": "write",
+      "action": {
+        "type": "command",
+        "command": "aidlc engine adapter kiro audit-and-sensors; exit $LASTEXITCODE"
+      },
+      "timeout": 3600
+    },
+    {
+      "name": "postToolUse-1",
+      "trigger": "postToolUse",
+      "matcher": "execute_bash",
+      "action": {
+        "type": "command",
+        "command": "aidlc engine adapter kiro rebuild-stage-graph; exit $LASTEXITCODE"
+      },
+      "timeout": 1800
+    },
+    {
+      "name": "postToolUse-2",
+      "trigger": "postToolUse",
+      "matcher": "todo_list",
+      "action": {
+        "type": "command",
+        "command": "aidlc engine adapter kiro sync-workflow-state; exit $LASTEXITCODE"
+      },
+      "timeout": 1800
+    },
+    {
+      "name": "postToolUse-3",
+      "trigger": "postToolUse",
+      "matcher": "subagent",
+      "action": {
+        "type": "command",
+        "command": "aidlc engine adapter kiro log-subagent; exit $LASTEXITCODE"
+      },
+      "timeout": 1800
+    },
+    {
+      "name": "preToolUse-0",
+      "trigger": "preToolUse",
+      "matcher": "execute_bash",
+      "action": {
+        "type": "command",
+        "command": "aidlc engine adapter kiro state-transition-guard; exit $LASTEXITCODE"
+      },
+      "timeout": 1800
+    },
+    {
+      "name": "preToolUse-1",
+      "trigger": "preToolUse",
+      "matcher": "execute_bash",
+      "action": {
+        "type": "command",
+        "command": "aidlc engine adapter kiro guard-tool-call; exit $LASTEXITCODE"
+      },
+      "timeout": 1800
+    },
+    {
+      "name": "preToolUse-2",
+      "trigger": "preToolUse",
+      "matcher": "write",
+      "action": {
+        "type": "command",
+        "command": "aidlc engine adapter kiro review-freeze; exit $LASTEXITCODE"
+      },
+      "timeout": 1800
+    },
+    {
+      "name": "preToolUse-3",
+      "trigger": "preToolUse",
+      "matcher": "execute_bash",
+      "action": {
+        "type": "command",
+        "command": "aidlc engine adapter kiro review-freeze; exit $LASTEXITCODE"
+      },
+      "timeout": 1800
+    },
+    {
+      "name": "preToolUse-4",
+      "trigger": "preToolUse",
+      "matcher": "subagent",
+      "action": {
+        "type": "command",
+        "command": "aidlc engine adapter kiro deliver-stage-rules; exit $LASTEXITCODE"
+      },
+      "timeout": 1800
+    },
+    {
+      "name": "preToolUse-5",
+      "trigger": "preToolUse",
+      "matcher": "subagent",
+      "action": {
+        "type": "command",
+        "command": "aidlc engine adapter kiro plan-approval-guard; exit $LASTEXITCODE"
+      },
+      "timeout": 1800
+    },
+    {
+      "name": "preToolUse-6",
+      "trigger": "preToolUse",
+      "matcher": "write",
+      "action": {
+        "type": "command",
+        "command": "aidlc engine adapter kiro plan-approval-guard; exit $LASTEXITCODE"
+      },
+      "timeout": 1800
+    },
+    {
+      "name": "preToolUse-7",
+      "trigger": "preToolUse",
+      "matcher": "execute_bash",
+      "action": {
+        "type": "command",
+        "command": "aidlc engine adapter kiro plan-approval-guard; exit $LASTEXITCODE"
+      },
+      "timeout": 1800
+    },
+    {
+      "name": "stop-0",
+      "trigger": "stop",
+      "action": {
+        "type": "command",
+        "command": "aidlc engine adapter kiro continue-workflow; exit $LASTEXITCODE"
+      },
+      "timeout": 3600
+    },
+    {
+      "name": "userPromptSubmit-0",
+      "trigger": "userPromptSubmit",
+      "action": {
+        "type": "command",
+        "command": "aidlc engine adapter kiro verb-intercept; exit $LASTEXITCODE"
+      },
+      "timeout": 1800
+    }
+  ],
+  "permissions": {
+    "rules": [
       {
-        "command": "aidlc engine adapter kiro session-start",
-        "timeout_ms": 1800000
-      }
-    ],
-    "userPromptSubmit": [
-      {
-        "command": "aidlc engine adapter kiro verb-intercept",
-        "timeout_ms": 1800000
-      }
-    ],
-    "preToolUse": [
-      {
-        "matcher": "execute_bash",
-        "command": "aidlc engine adapter kiro state-transition-guard",
-        "timeout_ms": 1800000
+        "capability": "shell",
+        "match": [
+          "aidlc engine *",
+          "aidlc doctor",
+          "aidlc doctor --verbose",
+          "aidlc version",
+          "aidlc --doctor",
+          "aidlc --doctor --verbose",
+          "aidlc --version",
+          "aidlc status",
+          "aidlc --status",
+          "aidlc config --help",
+          "aidlc config --show",
+          "aidlc config --show --json",
+          "aidlc config models --show",
+          "aidlc config models --show --json",
+          "aidlc config models --help",
+          "aidlc config runtime --show",
+          "aidlc config runtime --show --json",
+          "aidlc config runtime --help",
+          "aidlc config providers --show",
+          "aidlc config providers --show --json",
+          "aidlc config providers --help",
+          "aidlc config trust --show",
+          "aidlc config trust --show --json",
+          "aidlc config trust --help",
+          "aidlc config flags --show",
+          "aidlc config flags --show --json",
+          "aidlc config flags --help",
+          "aidlc config project --show",
+          "aidlc config project --show --json",
+          "aidlc config project --help",
+          "aidlc config flags --clear-bypass AIDLC_SKIP_ARTIFACT_GUARD --yes",
+          "aidlc config flags --clear-bypass AIDLC_SKIP_REVISION_BACKSTOP --yes",
+          "aidlc config flags --clear-bypass AIDLC_SKIP_SUMMARY_CONFIRMATION_GUARD --yes",
+          "aidlc config flags --clear-bypass AIDLC_SKIP_HUMAN_PRESENCE_GUARD --yes",
+          "aidlc config flags --clear-bypass AIDLC_DISABLE_ENSEMBLE_EVIDENCE --yes",
+          "aidlc config flags --clear-bypass AIDLC_DISABLE_PLAN_APPROVAL_GUARD --yes",
+          "aidlc config flags --clear-bypass AIDLC_DISABLE_REVIEWER_SCOPE_HOOK --yes",
+          "aidlc config flags --clear-bypass AIDLC_DISABLE_REVIEW_FREEZE_HOOK --yes",
+          "aidlc config flags --clear-bypass AIDLC_DISABLE_USAGE_TRACKING --yes",
+          "aidlc config flags --clear-bypass AIDLC_DISABLE_SENSORS --yes",
+          "aidlc config flags --clear-bypass AIDLC_DISABLE_LEARNINGS --yes",
+          "aidlc config flags --clear-bypass AIDLC_DISABLE_SUMMARY_CONFIRMATION --yes"
+        ],
+        "effect": "allow"
       },
       {
-        "matcher": "execute_bash",
-        "command": "aidlc engine adapter kiro guard-tool-call",
-        "timeout_ms": 1800000
+        "capability": "fs_write",
+        "match": [
+          "aidlc/spaces/**",
+          ".kiro/sensors/**",
+          "aidlc/.aidlc-compose-pending",
+          "./[!.]*",
+          "[!.]*/**",
+          ".aidlc/worktrees/*/aidlc/spaces/**"
+        ],
+        "effect": "allow"
       },
       {
-        "matcher": "fs_write",
-        "command": "aidlc engine adapter kiro review-freeze",
-        "timeout_ms": 1800000
+        "capability": "subagent",
+        "match": [
+          "aidlc-architect-agent",
+          "aidlc-architecture-reviewer-agent",
+          "aidlc-aws-platform-agent",
+          "aidlc-compliance-agent",
+          "aidlc-composer-agent",
+          "aidlc-delivery-agent",
+          "aidlc-design-agent",
+          "aidlc-developer-agent",
+          "aidlc-devsecops-agent",
+          "aidlc-operations-agent",
+          "aidlc-pipeline-deploy-agent",
+          "aidlc-product-agent",
+          "aidlc-product-lead-agent",
+          "aidlc-quality-agent"
+        ],
+        "effect": "allow"
       },
       {
-        "matcher": "execute_bash",
-        "command": "aidlc engine adapter kiro review-freeze",
-        "timeout_ms": 1800000
+        "capability": "fs_read",
+        "effect": "allow"
       },
       {
-        "matcher": "subagent",
-        "command": "aidlc engine adapter kiro deliver-stage-rules",
-        "timeout_ms": 1800000
-      },
-      {
-        "matcher": "subagent",
-        "command": "aidlc engine adapter kiro plan-approval-guard",
-        "timeout_ms": 1800000
-      },
-      {
-        "matcher": "fs_write",
-        "command": "aidlc engine adapter kiro plan-approval-guard",
-        "timeout_ms": 1800000
-      },
-      {
-        "matcher": "execute_bash",
-        "command": "aidlc engine adapter kiro plan-approval-guard",
-        "timeout_ms": 1800000
-      }
-    ],
-    "postToolUse": [
-      {
-        "matcher": "fs_write",
-        "command": "aidlc engine adapter kiro audit-and-sensors",
-        "timeout_ms": 3600000
-      },
-      {
-        "matcher": "execute_bash",
-        "command": "aidlc engine adapter kiro rebuild-stage-graph",
-        "timeout_ms": 1800000
-      },
-      {
-        "matcher": "todo_list",
-        "command": "aidlc engine adapter kiro sync-workflow-state",
-        "timeout_ms": 1800000
-      },
-      {
-        "matcher": "subagent",
-        "command": "aidlc engine adapter kiro log-subagent",
-        "timeout_ms": 1800000
-      }
-    ],
-    "stop": [
-      {
-        "command": "aidlc engine adapter kiro continue-workflow",
-        "timeout_ms": 3600000
+        "capability": "skill",
+        "effect": "allow"
       }
     ]
+  },
+  "kiroUpgrade": {
+    "revision": 2,
+    "fingerprint": "sha256:d4c497cff96c24655c2123caf77d2faa4876b66ad5f856a382c77c8d08d15e9e",
+    "source": "sha256:19798f5e528399aed7fdb8894b3642f68d773c7356908d5c8d34dcdf2d701b55"
   }
 }
