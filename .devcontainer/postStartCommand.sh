@@ -1,22 +1,23 @@
 #!/bin/bash
-devcontainer templates apply \
-  --template-id ghcr.io/katohirosato/aws-dev/aws-dev \
-  --omit-paths '[
-    ".git/*",
-    ".gitignore",
-    ".github/workflows/init.yaml",
-    ".github/workflows/template.yaml",
-    ".devcontainer/config",
-    ".devcontainer/.env",
-    ".devcontainer/devcontainer-lock.json",
-    "devcontainer-template.json",
-    "history.sh",
-    "startup.sh",
-    "README.md",
-    "cdk-elements/*"
-  ]';
+# devcontainer templates apply \
+#   --template-id ghcr.io/katohirosato/aws-dev/aws-dev \
+#   --omit-paths '[
+#     ".git/*",
+#     ".gitignore",
+#     ".github/workflows/init.yaml",
+#     ".github/workflows/template.yaml",
+#     ".devcontainer/config",
+#     ".devcontainer/.env",
+#     ".devcontainer/devcontainer-lock.json",
+#     "devcontainer-template.json",
+#     "history.sh",
+#     "startup.sh",
+#     "README.md",
+#     "cdk-elements/*"
+#   ]';
 
 aidlc config --harness kiro;
 aidlc config --harness claude --mcp defaults;
+aidlc config --harness codex --mcp defaults;
 git config --global user.name katohirosato
 git config --global user.email hirosato654@gmail.com

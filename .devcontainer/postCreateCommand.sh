@@ -10,6 +10,7 @@ npm install -g @openai/codex
 mkdir -p ~/.kiro/skills
 mkdir -p ~/.claude/skills
 mkdir -p ~/.agents/skills
+mkdir -p ~/.codex
 
 aws configure agent-toolkit --yes --region us-east-1;
 
