@@ -33,5 +33,9 @@
   "providers": {
     "schemaVersion": 1,
     "provider": "current"
+  },
+  "modelsAnswer": {
+    "schemaVersion": 1,
+    "kept": true
   }
 }
