@@ -18,7 +18,6 @@ devcontainer templates apply \
 
 aidlc config --harness kiro;
 aidlc config --harness claude --mcp defaults;
-aidlc config --harness codex --mcp defaults;
 
 git config --global user.name katohirosato
 git config --global user.email hirosato654@gmail.com
