@@ -1,4 +1,4 @@
-# Question Rendering — Kiro CLI harness annex
+# Question Rendering — Kiro IDE harness annex
 
 This file defines how THIS harness renders the structured questions that
 `.kiro/aidlc-common/protocols/stage-protocol.md` section "Structured questions" requires.
@@ -47,7 +47,7 @@ prohibition is about echoing raw fences in live orchestration turns.)
 
 ## Mechanism
 
-Kiro CLI has no structured-question tool, so every structured question renders
+Kiro IDE has no structured-question tool, so every structured question renders
 as **numbered prose options in chat**, and the user answers with a number (or
 free text). Render the spec like this:
 

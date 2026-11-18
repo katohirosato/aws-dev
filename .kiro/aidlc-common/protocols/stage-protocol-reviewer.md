@@ -118,6 +118,12 @@ through normal recovery; do not rewrite receipts or assume a new receipt format.
    says). The request remains unmatched while the reviewer runs, so the
    approval gate and completion stay blocked.
 
+   Every dispatch starts a new reviewer subagent, re-dispatches included.
+   Never continue a reviewer from an earlier dispatch (of this stage, another
+   stage, or another Unit) by sending it a message: it still holds its earlier
+   reviews, which undoes the independent judgment below and grows its context
+   with every stage.
+
    Pass:
    - The stage definition file path (`directive.stage_file`)
    - The Q&A file path (e.g., `<record>/<phase>/<stage>/<stage>-questions.md`)
@@ -404,7 +410,7 @@ Write and edit files yourself with your file tools, never through the shell (no 
 
 Use only the subsection that matches the active harness.
 
-### Kiro CLI
+### Kiro IDE
 
 If `directive.reviewer` is present, invoke the reviewer as a sub-agent (via the `subagent` tool targeting the reviewer agent config).
 
